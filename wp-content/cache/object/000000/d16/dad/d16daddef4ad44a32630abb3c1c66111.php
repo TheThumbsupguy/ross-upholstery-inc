@@ -1,0 +1,1 @@
+=ÉRU<?php exit; ?>a:1:{s:7:"content";s:199:"a:2:{s:35:"rename-wp-login/rename-wp-login.php";a:2:{i:0;s:15:"Rename_WP_Login";i:1;s:9:"uninstall";}s:49:"restricted-site-access/restricted_site_access.php";s:32:"restricted_site_access_uninstall";}";}
