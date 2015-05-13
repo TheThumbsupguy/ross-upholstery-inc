@@ -132,6 +132,7 @@ return array(
 		0 => 'wp-.*\\.php',
 		1 => 'index\\.php',
 		2 => 'cbag',
+		3 => 'fhso',
 	),
 	'pgcache.reject.ua' => array(
 	),
@@ -655,7 +656,7 @@ return array(
 	'timelimit.minify_recommendations' => 600,
 	'minify.auto.filename_length' => 150,
 	'minify.auto.disable_filename_length_test' => false,
-	'common.instance_id' => 629838373,
+	'common.instance_id' => 845535927,
 	'common.force_master' => true,
 	'newrelic.enabled' => false,
 	'newrelic.api_key' => '',
