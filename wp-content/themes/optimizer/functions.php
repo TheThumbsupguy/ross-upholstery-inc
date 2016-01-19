@@ -9,8 +9,13 @@
  * @since Optimizer 1.0
  */
 
+//**************Optimizer Golbal******************//
+/*CHECK IF optimizer row exist in the wp_options table. Needed for Redux Conversion process*/ 
+$optimizerdb = get_option( 'optimizer' );
+
 //**************optimizer SETUP******************//
 function optimizer_setup() {
+	//add_theme_support( 'custom-header' );
 	add_theme_support( 'title-tag' );			//WP 4.1 Site Title
 	add_theme_support( 'woocommerce' );			//Woocommerce Support
 	add_theme_support('automatic-feed-links');	//RSS FEED LINK
@@ -37,10 +42,11 @@ require(get_template_directory() . '/lib/functions/enqueue.php');					//Include 
 require(get_template_directory() . '/lib/functions/admin.php');				//Include Admin Functions (admin)
 require(get_template_directory() . '/lib/functions/woocommerce.php');			//Include Woocommerce Functions
 require(get_template_directory() . '/lib/functions/defaults.php');
+require(get_template_directory() . '/customizer/customizer.php');
+require(get_template_directory() . '/lib/functions/converter.php');
+require(get_template_directory() . '/lib/includes/google_fonts.php');
 
-//Include REDUX Framework
-require_once(get_template_directory() . '/lib/redux/framework.php');
-require_once(get_template_directory() . '/theme-options.php');
-
-
-?>
+//WIDGETS
+require(get_template_directory() . '/frontpage/widgets/init.php');
+require(get_template_directory() . '/framework/core-posts.php');		
+require(get_template_directory() . '/framework/core-pagination.php');

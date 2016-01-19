@@ -319,3 +319,16 @@ a.pro_demos:hover, a.pro_buy:hover{ opacity:0.7;}
 .optim_footer {margin: 15px 0;width: 100%;float: left;}
 .optim_changelog {color: #999;text-decoration: none;float: right;}
 .optim_changelog:hover{color:#666;}
+
+/*CONVERSION*/
+.convert_warning {
+  width: 60%;
+  float: right;
+  padding: 0 10px;
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #FFEAEA;
+  color: #B67171;
+  text-align: left;
+}
+.convert_warning a{color: #B67171; text-decoration:underline;}

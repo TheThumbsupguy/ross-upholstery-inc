@@ -10,27 +10,28 @@
  */
  
 //Front page query
+
 function optimizer_home_query($query) {
-
-    if( $query->is_main_query() && $query->is_home() ) {
-		global $optimizer;
-		if(!empty($optimizer['n_posts_type_id'])){
-			$postype = $optimizer['n_posts_type_id'];
-			set_query_var( 'post_type', ''.$postype.'');
+	global $optimizer;
+	global $optimizerdb; 
+	if(!empty($optimizerdb) && empty($optimizer['converted'])) {
+			if( $query->is_main_query() && is_front_page() ) {
+				
+				$postype = $optimizer['n_posts_type_id'];
+				set_query_var( 'post_type', ''.$postype.'');
+				set_query_var( 'paged', ( get_query_var('paged') ? get_query_var('paged') : 1) );
+				$postcount = $optimizer['n_posts_field_id'];
+						set_query_var( 'posts_per_page', ''.$postcount.'' );
+				
+				if(!empty($optimizer['posts_cat_id'])){
+					$postcat = $optimizer['posts_cat_id'];
+					set_query_var( 'cat', ''.implode(',', $postcat).'' );
+				}
+		
+			}
 		}
-		if(!empty($optimizer['n_posts_field_id'])){
-			$postcount = $optimizer['n_posts_field_id'];
-			set_query_var( 'paged', ( get_query_var('paged') ? get_query_var('paged') : 1) );
-			set_query_var( 'posts_per_page', ''.absint($postcount).'' );
-		}
-		if(!empty($optimizer['posts_cat_id'])){
-			$postcat = $optimizer['posts_cat_id'];
-			set_query_var( 'cat', ''.implode(',', $postcat).'' );
-		}
-
-    }
-	
 }
+
 add_action( 'pre_get_posts', 'optimizer_home_query' );
 
 
@@ -42,14 +43,17 @@ function optimizer_body_class( $classes ) {
 	if(!empty($optimizer['head_transparent'])){
 		$classes[] = 'has_trans_header';
 	}
-	if('product' == $optimizer['n_posts_type_id']){ 
-		$classes[] = 'woocommerce';
-	}
 	if('site_boxed' == $optimizer['site_layout_id']){
 		$classes[] = 'is_boxed';
 	}
 	if(is_rtl()){
 		$classes[] = 'layer_rtl';
+	}
+	if ( !is_front_page() ) {
+		$classes[] = 'not_frontpage';
+	}
+	if ( is_customize_preview() ) {
+		$classes[] = 'customizer-prev';
 	}
 
 	return $classes;
@@ -59,27 +63,37 @@ add_filter( 'body_class', 'optimizer_body_class' );
 	
 //SIDEBAR
 function optimizer_widgets_init(){
-	
+
+	$editbutton = (is_customize_preview() ? '<a class="edit_widget" title="Edit Widget - #%1$s"><i class="fa fa-pencil"></i></a>' : '');
 	register_sidebar(array(
 	'name'          => __('Right Sidebar', 'optimizer'),
 	'id'            => 'sidebar',
-	'description'   => __('Right Sidebar', 'optimizer'),
-	'before_widget' => '<div id="%1$s" class="widget %2$s"><div class="widget_wrap">',
+	'description'   => __('When you assign widgets to this area, it will be displayed on the right side of all pages and posts', 'optimizer'),
+	'before_widget' => '<div id="%1$s" class="widget %2$s" data-widget-id="%1$s"><div class="widget_wrap">'.$editbutton,
 	'after_widget'  => '<span class="widget_corner"></span></div></div>',
 	'before_title'  => '<h3 class="widgettitle">',
 	'after_title'   => '</h3>'
 	));
-	
+		
 	register_sidebar(array(
 	'name'          => __('Footer Widgets', 'optimizer'),
 	'id'            => 'foot_sidebar',
-	'description'   => __('Widget Area for the Footer', 'optimizer'),
-	'before_widget' => '<li id="%1$s" class="widget %2$s"><div class="widget_wrap">',
-	'after_widget'  => '</div>',
+	'description'   => __('This Widget Area is displayed in the footer section of your site.', 'optimizer'),
+	'before_widget' => '<li id="%1$s" class="widget %2$s" data-widget-id="%1$s"><div class="widget_wrap">'.$editbutton,
+	'after_widget'  => '</li>',
 	'before_title'  => '<h3 class="widgettitle">',
 	'after_title'   => '</h3>'
 	));
-
+	
+	register_sidebar(array(
+	'name'          => __('Frontpage Widgets', 'optimizer'),
+	'id'            => 'front_sidebar',
+	'description'   => __('With Optmizer Free you can only add 4 widgets to this Area. Upgrade to PRO to add unlimited Widgets.', 'optimizer'),
+	'before_widget' => '<div id="%1$s" class="widget %2$s" data-widget-id="%1$s"><div class="widget_wrap">'.$editbutton,
+	'after_widget'  => '</div></div>',
+	'before_title'  => '<h3 class="widgettitle">',
+	'after_title'   => '</h3>'
+	));
 	
 }
 
@@ -88,7 +102,6 @@ add_action( 'widgets_init', 'optimizer_widgets_init' );
 
 //Default Placeholder Image
 function optimizer_placeholder_image(){
-	global $optimizer;
 	return ''. get_template_directory_uri().'/assets/images/blank_img.png';
 }
 
@@ -139,7 +152,7 @@ function optimizer_search_form( $form ) {
     $form = '<form role="search" method="get" id="searchform" action="' . home_url( '/' ) . '" >
     <div>
     <input placeholder="' . __( 'Search &hellip;', 'optimizer' ) . '" type="text" value="' . get_search_query() . '" name="s" id="s" />
-    <input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search', 'optimizer' ) .'" />
+    <input type="submit" id="searchsubmit" value="'. __( 'Search', 'optimizer' ) .'" />
     </div>
     </form>';
 
@@ -160,7 +173,7 @@ function optimizer_comment($comment, $args, $depth) {
       
       <div class="comment-author vcard">
             <div class="avatar"><?php echo get_avatar($comment,$size='30' ); ?></div>
-            <div class="comm_auth"><?php printf(__('%s', 'layerthemes'), get_comment_author_link()) ?></div>
+            <div class="comm_auth"><?php printf(__('%s', 'optimizer'), get_comment_author_link()) ?></div>
             <a class="comm_date"><i class="fa-clock-o"></i><?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ago'; ?></a>
             
             <div class="comm_reply">
@@ -196,7 +209,7 @@ $GLOBALS['comment'] = $comment; ?>
       <?php endif; ?>
 
       <div class="org_ping">
-      	<?php printf(__('<cite class="citeping">%s</cite> <span class="says">:</span>'), get_comment_author_link()) ?>
+      	<?php printf(__('<cite class="citeping">%s</cite> <span class="says">:</span>', 'optimizer'), get_comment_author_link()) ?>
 	  	<?php comment_text() ?>
             <div class="comm_meta_reply">
             <div class="comm_date"><i class="fa-clock-o"></i><?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ago'; ?></div>
@@ -224,4 +237,3 @@ function optimizer_comment_form_fields($fields){
 }
 
 add_filter('comment_form_default_fields','optimizer_comment_form_fields');
-

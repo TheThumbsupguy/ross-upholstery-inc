@@ -10,9 +10,9 @@
  */
 global $optimizer;?>
   
-        <div id="ast_nextprev" class="navigation">
+        <div id="ast_nextprev" class="navigation <?php if (empty($optimizer['post_nextprev_id'])){ echo 'hide_nextprev'; }?>">
         
-			<span class="div_middle"><i class="fa <?php echo $optimizer['divider_icon']; ?>"></i></span> 
+			<span class="div_middle"><i class="fa fa-stop"></i></span> 
             
             <?php $prevPost = get_previous_post(true); if($prevPost) {?>
                 <div class="nav-box ast-prev">

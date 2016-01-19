@@ -12,19 +12,7 @@ global $optimizer;
 ?>
     <div class="lay1">
         <div class="center">
-        
-        <?php /* If homepage Display the Title */?>
-        <?php if ( is_home() ) { ?>
-            <div class="homeposts_title">
-            	<?php if($optimizer['posts_title_id']) { ?><h2 class="home_title"><?php echo do_shortcode($optimizer['posts_title_id']); ?></h2><?php }?>
-                <?php if($optimizer['posts_subtitle_id']) { ?><div class="home_subtitle"><?php echo do_shortcode(esc_textarea(($optimizer['posts_subtitle_id']))); ?></div><?php }?>
-                    <?php if($optimizer['posts_title_id']) { ?>
-						<?php get_template_part('template_parts/divider','icon'); ?>
-                    <?php }?>
-            </div>
-        <?php }?>
-        
-        
+
             <div class="lay1_wrap <?php if(!empty($optimizer['lay_show_title']) ) { ?>lay1_tt_on<?php }?>">
 				  <?php if(have_posts()): ?><?php while(have_posts()): ?><?php the_post(); ?>
                   
@@ -92,9 +80,11 @@ global $optimizer;
         
         
         <!--PAGINATION START-->
-        <?php get_template_part( 'framework/core','pagination' ); ?> 
+            <div class="ast_pagenav">
+                <?php the_posts_pagination( array('mid_size' => 2,'prev_text' => '','next_text' => '','screen_reader_text ' => '') );  ?>
+            </div>
         <!--PAGINATION END-->
         
-        <?php wp_reset_query(); ?>
+        <?php wp_reset_postdata(); ?>
        </div><!--center class end-->
     </div><!--lay1 class end-->

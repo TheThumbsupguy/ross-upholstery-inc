@@ -63,6 +63,6 @@ global $optimizer;?>
         
 
         
-        <?php wp_reset_query(); ?>
+        <?php wp_reset_postdata(); ?>
        </div><!--center class end-->
     </div><!--lay1 class end-->

@@ -13,7 +13,7 @@ global $optimizer;?>
    <?php if (is_single() || is_page()) {?>
    <?php $imgbg = get_post_meta( $post->ID, 'page_head', true ); ?>
 	<!--Header for PAGE & POST-->
-      <div class="page_head">
+      <div class="page_head <?php if(!empty($optimizer['hide_mob_page_header'])) { ?> hide_mob_headerimg<?php } ?>">
 
       <!--The Page Title -->
           <div class="pagetitle_wrap">
@@ -27,7 +27,7 @@ global $optimizer;?>
       
       <?php if (is_category()) {?>
       <!--Header for CATEGORY-->
-      <div class="page_head<?php if(!category_description( )) { ?> has_cat_desc<?php } ?>">
+      <div class="page_head<?php if(!category_description( )) { ?> has_cat_desc<?php } ?> <?php if(!empty($optimizer['hide_mob_page_header'])) { ?> hide_mob_headerimg<?php } ?>">
 
       
       <!--The Page Title -->
@@ -43,7 +43,7 @@ global $optimizer;?>
       
       <?php if (is_tag()) {?>
       <!--Header for TAGS-->
-      <div class="page_head<?php if(!tag_description( )) { ?> has_tag_desc<?php } ?>">
+      <div class="page_head<?php if(!tag_description( )) { ?> has_tag_desc<?php } ?> <?php if(!empty($optimizer['hide_mob_page_header'])) { ?> hide_mob_headerimg<?php } ?>">
 
       
       <!--The Page Title -->
@@ -60,7 +60,7 @@ global $optimizer;?>
 	  <?php if ( class_exists( 'WooCommerce' ) ) { //If Wooceommerce  ?>
 		  <?php if ('product' == get_post_type()) {?>
           <!--Header for TAGS-->
-          <div class="page_head<?php if(!category_description( )) { ?> has_cat_desc<?php } ?>">
+          <div class="page_head<?php if(!category_description( )) { ?> has_cat_desc<?php } ?> <?php if(!empty($optimizer['hide_mob_page_header'])) { ?> hide_mob_headerimg<?php } ?>">
 
           <!--The Page Title -->
               <div class="pagetitle_wrap">

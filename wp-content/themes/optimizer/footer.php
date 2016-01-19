@@ -11,9 +11,7 @@
 global $optimizer;?>
 
 	<?php /*To Top Button */?>
-	<?php if (!empty ($optimizer['totop_id'])) { ?>
-    <a class="to_top"><i class="fa-angle-up fa-2x"></i></a>
-    <?php } ?>
+	<a class="to_top <?php if (empty ($optimizer['totop_id'])) { ?>hide_totop<?php } ?>"><i class="fa-angle-up fa-2x"></i></a>
 
 
 
@@ -38,21 +36,15 @@ global $optimizer;?>
                 <div class="center">
                 
                     <!--Site Copyright Text START-->
-                        <?php if (!empty ($optimizer['footer_text_id'])) { ?>
-                        	<div class="copytext">
-                                <?php $foot = html_entity_decode($optimizer['footer_text_id']); $foot = stripslashes($foot); echo do_shortcode($foot); ?>
-                        	</div>
-                        <?php }else{ ?>
-        					<div class="copytext"><?php printf( __( 'Theme by %s', 'optimizer' ), '<a target="_blank" href="https://www.layerthemes.com/">Layerthemes</a>' ); ?></div>
-        				<?php } ?>
+                    	<div class="copytext"><?php if (!empty ($optimizer['footer_text_id'])) { ?><?php $foot = html_entity_decode($optimizer['footer_text_id']); $foot = stripslashes($foot); echo do_shortcode($foot); ?><?php } ?></div>
+        					<!--<div class="copytext"><?php //printf( __( 'Theme by %s', 'optimizer' ), '<a target="_blank" href="http://optimizerwp.com/">Layerthemes</a>' ); ?></div>-->
+
                     <!--Site Copyright Text END-->
                
                <div class="foot_right_wrap">  
                     <!--SOCIAL ICONS START-->
-                        <?php if ('footer' == $optimizer['social_bookmark_pos']) { ?>
-                        <div class="foot_soc"><?php get_template_part('framework/core','social'); ?></div>
-                        <?php } ?>
-                    <!--SOCIAL ICONS END-->
+                      <div class="foot_soc"><?php if ($optimizer['social_bookmark_pos'] == 'footer') { ?><?php get_template_part('framework/core','social'); ?><?php } ?></div>
+                        <!--SOCIAL ICONS END-->
                 </div>
                 
                 </div><!--Center END-->

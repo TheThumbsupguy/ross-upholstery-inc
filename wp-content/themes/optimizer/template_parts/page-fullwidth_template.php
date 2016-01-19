@@ -21,7 +21,7 @@ Template Name: Full Width Page
                       <div <?php post_class(); ?> id="post-<?php the_ID(); ?>">  
                       
                         <!--EDIT BUTTON START-->
-                            <?php if ( is_user_logged_in() || is_admin() ) { ?>
+                            <?php if ( is_user_logged_in() && is_admin() ) { ?>
                                     <div class="edit_wrap">
                             			<a href="<?php echo get_edit_post_link(); ?>">
                             				<?php _e('Edit','optimizer'); ?>

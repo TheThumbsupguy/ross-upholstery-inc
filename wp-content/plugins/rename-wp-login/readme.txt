@@ -1,28 +1,23 @@
-=== Rename wp-login.php (unmaintained) ===
+=== Rename wp-login.php ===
 
-Contributors: avryl
-Tags: rename, login, wp-login, wp-login.php, custom login url
-Requires at least: 4.1
-Tested up to: 4.1
-Stable tag: 2.5.1
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Contributors:      iseulde, IvanRF
+Tags:              rename, login, wp-login, wp-login.php, custom login url
+Requires at least: 4.4
+Tested up to:      4.4.1
+Stable tag:        2.5.5
+License:           GPL-2.0+
 
 Change wp-login.php to anything you want.
 
 == Description ==
 
-***
-
-I don't actively work on this plugin anymore, so use at your own risk.
-
-***
+**I don't offer support through the support forum. Use [GitHub](https://github.com/iseulde/rename-wp-login) instead.**
 
 *Rename wp-login.php* is a very light plugin that lets you easily and safely change wp-login.php to anything you want. It doesn’t literally rename or change files in core, nor does it add rewrite rules. It simply intercepts page requests and works on any WordPress website. The wp-admin directory and wp-login.php page become inaccessible, so you should bookmark or remember the url. Deactivating this plugin brings your site back exactly to the state it was before.
 
 = Compatibility =
 
-Requires WordPress 4.1 or higher. All login related things such as the registration form, lost password form, login widget and expired sessions just keep working.
+All login related things such as the registration form, lost password form, login widget and expired sessions just keep working.
 
 It’s also compatible with any plugin that hooks in the login form, including
 
@@ -35,11 +30,9 @@ Obviously it doesn’t work with plugins that *hardcoded* wp-login.php.
 
 Works with multisite, but not tested with subdomains. Activating it for a network allows you to set a networkwide default. Individual sites can still rename their login page to something else.
 
-If you’re using a **page caching plugin** you should add the slug of the new login url to the list of pages not to cache. For W3 Total Cache and WP Super Cache this plugin will give you a message with a link to the field you should update.
+If you’re using a **page caching plugin** you should add the slug of the new login url to the list of pages not to cache.
 
-= GitHub =
-
-https://github.com/avryl/rename-wp-login
+If you wish, you can block wp-login.php with `.htaccess` from now on.
 
 == Installation ==
 
@@ -58,6 +51,14 @@ Either go to your MySQL database and look for the value of `rwl_page` in the opt
 On a multisite install the `rwl_page` option will be in the sitemeta table, if there is no such option in the options table.
 
 == Changelog ==
+
+= 2.5.5 =
+
+* Add missing `load_plugin_textdomain`.
+
+= 2.5.4 =
+
+* Added i18n support.
 
 = 2.5 =
 
@@ -126,7 +127,7 @@ On a multisite install the `rwl_page` option will be in the sitemeta table, if t
 = 1.6 =
 
 * Fixed the login link when `site_url()` ≠ `home_url()`.
-* Added a [mirror](https://github.com/avryl/rename-wp-login) on GitHub.
+* Added a [mirror](https://github.com/iseulde/rename-wp-login) on GitHub.
 
 = 1.5 =
 

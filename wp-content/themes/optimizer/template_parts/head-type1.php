@@ -18,7 +18,8 @@ global $optimizer;?>
             <!--LOGO START-->
                 <div class="logo">
                     <?php if(!empty($optimizer['logo_image_id']['url'])){   ?>
-                        <a class="logoimga" title="<?php bloginfo('name') ;?>" href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php $logo = $optimizer['logo_image_id']; echo esc_url($logo['url']); ?>" /></a>
+                        <a class="logoimga" title="<?php bloginfo('name') ;?>" href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php $logo = $optimizer['logo_image_id']; echo $logo['url']; ?>" /></a>
+                        <span class="desc"><?php echo bloginfo('description'); ?></span>
                     <?php }else{ ?>
                             <?php if ( is_home() ) { ?>   
                             <h1><a href="<?php echo esc_url( home_url( '/' ) );?>"><?php bloginfo('name'); ?></a></h1>
@@ -40,9 +41,9 @@ global $optimizer;?>
                 <div id="topmenu" class="<?php if ('header' == $optimizer['social_bookmark_pos'] ) { ?> has_bookmark<?php } ?>">
                 <?php wp_nav_menu( array( 'container_class' => 'menu-header', 'theme_location' => 'primary' ) ); ?>
                 <!--LOAD THE HEADR SOCIAL LINKS-->
-                <?php if ('header' == $optimizer['social_bookmark_pos']) { ?>
-                    <div class="head_soc"><?php get_template_part('framework/core','social'); ?></div>
-                <?php } ?>
+					<div class="head_soc">
+						<?php if ($optimizer['social_bookmark_pos'] == 'header') { ?><?php get_template_part('framework/core','social'); ?><?php } ?>
+                    </div>
                 </div>
             <!--MENU END-->
             

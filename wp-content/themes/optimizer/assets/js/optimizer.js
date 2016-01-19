@@ -26,35 +26,49 @@ jQuery(window).ready(function() {
 	//MENU Animation
 	if (jQuery(window).width() > 768) {
 		
-		jQuery('#topmenu ul > li').not('#topmenu ul > li.megamenu').hoverIntent(function(){
+		jQuery('#topmenu ul > li').not('#topmenu ul > li.mega-menu-item').hoverIntent(function(){
 			jQuery(this).find('.sub-menu, ul.children').not('.sub-menu .sub-menu, ul.children ul.children').removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
 		}, function(){
 			jQuery(this).find('.sub-menu, ul.children').not('.sub-menu .sub-menu, ul.children ul.children').addClass('animated fadeOut').delay(300).queue(function(next){ jQuery(this).removeClass("animated fadeInUp menushow");next();});
 	});
 	
-		jQuery('#topmenu ul li ul li').not('#topmenu ul li.megamenu ul li').hoverIntent(function(){
+		jQuery('#topmenu ul li ul li').not('#topmenu ul li.mega-menu-item ul.mega-sub-menu li').hoverIntent(function(){
 			jQuery(this).find('.sub-menu, ul.children').removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
 		}, function(){
 			jQuery(this).find('.sub-menu, ul.children').addClass('animated fadeOut').delay(300).queue(function(next){
 						jQuery(this).removeClass("animated fadeInUp menushow");next();});
 		});
 	
+	jQuery('#topmenu ul li').not('#topmenu ul li.mega-menu-item, #topmenu ul li ul li').hover(function(){
+		jQuery(this).addClass('menu_hover');
+	}, function(){
+		jQuery(this).removeClass('menu_hover');	
+	});
+	jQuery('#topmenu li').has("ul").addClass('zn_parent_menu');
+	jQuery('.zn_parent_menu > a').append('<span class="menu_arrow"><i class="fa-angle-down"></i></span>');
+	
 	}
 
 	//BLOCKS Equal height
-	jQuery('.block_type1 .midrow_blocks_wrap').waitForImages(function() {
-		jQuery('.mid_block_content').matchHeight();
-	});
+	jQuery('.midrow_blocks_wrap').each(function(index, element) {
+		jQuery(this).waitForImages(function() {
+			jQuery(this).find('.midrow_block').matchHeight({ property: 'min-height'});
+		});
+    });
+
 	
 	//Layout1 Animation
-	var divs = jQuery(".lay1 .hentry");
-	for(var i = 0; i < divs.length; i+=3) {
-	  divs.slice(i, i+3).wrapAll("<div class='ast_row'></div>");
-	}
-	if (jQuery(window).width() < 1200) {
-		var flaywidth = jQuery('.lay1 .hentry').width();
-		jQuery('.lay1 .post_image').css({"maxHeight":(flaywidth * 66)/100});
-	}
+	jQuery(".lay1").each(function(index, element) {
+		var divs = jQuery(this).find(".hentry");
+		for(var i = 0; i < divs.length; i+=3) {
+		  divs.slice(i, i+3).wrapAll("<div class='ast_row'></div>");
+		}
+		if (jQuery(window).width() < 1200) {
+			var flaywidth = jQuery(this).find(".hentry").width();
+			jQuery(this).find('.post_image').css({"maxHeight":(flaywidth * 66)/100});
+		}
+    });
+	
 	jQuery('.lay1 .postitle a:empty').closest("h2").addClass('no_title');
 	jQuery('.no_title').css({"padding":"0"});
 	
@@ -78,61 +92,49 @@ jQuery(window).ready(function() {
 	  return false;
 	});
 
-	//Hide Homepage Elemnts if empty
-	jQuery('.home_blocks').each(function () {
-		if(jQuery(this).html().length > 3) {
-			jQuery(this).addClass('activeblock');
-			}
-	});
-	jQuery('.lay1, .lay2, .lay3, .lay4, .lay5, .lay6').not(':has(.hentry), :has(.type-product)').css({"display":"none"});
-
 
 	//STATIC SLIDER IMAGE FIXED
 	jQuery('.stat_has_img').waitForImages(function() {
 		var statimg = jQuery(".stat_has_img .stat_bg_img").attr('src');
-		var statimgheight = jQuery(".stat_has_img .stat_bg_img").height();
+		var statimgheight = jQuery(".stat_has_img .stat_bg_img").height() + jQuery(".header").height();
 		var hheight = jQuery(".header").height();
-		jQuery("body.home").prepend('<div class="stat_bg" style="background-image:url('+statimg+'); height:'+statimgheight+'px" /><div class="stat_bg_overlay overlay_off" style="height:'+statimgheight+'px" />');
+		jQuery("body.home").prepend('<div class="stat_bg" style="height:'+statimgheight+'px"><img src="'+statimg+'" /></div><div class="stat_bg_overlay overlay_off" style="height:'+statimgheight+'px" />');
 		jQuery('#slidera').css({"minHeight":"initial"});
-		
-		//Static Slider Fade on scroll
-		jQuery('.home .stat_has_img').waypoint(function() {
-		  jQuery(".home .stat_bg_overlay").removeClass("overlay_off").addClass("overlay_on");
-		}, { offset: '-170px' });	
+		jQuery('.home .stat_has_img .stat_bg_img').css('opacity', 0);
 
-		//Header color on scroll
-		jQuery('.home .stat_has_img').waypoint(function() {
-		  jQuery(".is-sticky .header").addClass("headcolor");
-		}, { offset: '-'+statimgheight/3+'px' });	
+		//Static Slider Overlay on scroll
+		overlayon = jQuery(".home .stat_has_img");
+		overlayon.waypoint({  handler: function(direction) {   jQuery('.home .stat_bg_overlay').removeClass("overlay_off").addClass("overlay_on");  },   offset: '-170px'   });
 		
-		jQuery('.home .stat_has_img').waypoint(function() {
-		  jQuery(".home .stat_bg_overlay").removeClass("overlay_on").addClass("overlay_off");
-		  jQuery(".is-sticky .header").removeClass("headcolor");
-		}, { offset: '-90px' });
+		overlayoff = jQuery(".home .stat_has_img");
+		overlayoff.waypoint({  handler: function(direction) {   jQuery('.home .stat_bg_overlay').removeClass("overlay_on").addClass("overlay_off");;  },   offset: '-90px'   });
+
+		
 	});	
+	
 	jQuery('.stat_has_img').waitForImages(function() {
 		var resizeTimer;
-		jQuery(window).resize(function() {
+		jQuery(window).bind("load resize", function() {
 		  clearTimeout(resizeTimer);
 		  resizeTimer = setTimeout(function() {
-			var body_size = jQuery('.stat_has_img .stat_bg_img').height();
-			jQuery('#stat_img, .stat_bg').height(body_size);
+			var body_size = jQuery('.stat_has_img .stat_content_inner .center').height() + 120;
+			jQuery('#stat_img, .stat_bg img, .stat_bg_overlay').css('min-height',body_size);
 		  }, 50);
 		});
 	});
-	
 
-
+		
+		
 jQuery(window).bind("load resize", function() {
 	if (jQuery(window).width() <= 480) {	
 		jQuery(".stat_bg_img").css({"opacity":"0"});
 		jQuery('.stat_content_inner').waitForImages(function() { jQuery("#stat_img").height(jQuery(".stat_content_inner").height());  });
 		var statbg = jQuery(".stat_bg_img").attr('src');
-		jQuery("#stat_img").css({"background":"url("+statbg+")", "background-repeat":"no-repeat", "background-size":"cover"});
+		jQuery(".stat_has_img").css({"background":"url("+statbg+")", "background-repeat":"no-repeat", "background-size":"cover"});
 	}
 	if (jQuery(window).width() <= 960 <= 480) {	
 		var statbg = jQuery(".stat_bg_img").attr('src');
-		jQuery("#stat_img").css({"background":"url("+statbg+") top center", "background-repeat":"no-repeat", "background-size":"cover"});
+		jQuery(".stat_has_img").css({"background":"url("+statbg+") top center", "background-repeat":"no-repeat", "background-size":"cover"});
 		jQuery('.has_trans_header .stat_content_inner, .has_trans_header .header').waitForImages(function() { 
 			var mhheight = jQuery(".has_trans_header .header").height();
 			jQuery(".has_trans_header .stat_content_inner").css({"paddingTop":mhheight});
@@ -155,12 +157,6 @@ if (jQuery(window).width() > 480) {
 			}, { offset: '-90px' });
 		});	
 		
-			
-	//ABOUT ANIMATION
-	jQuery('.aboutblock .text_block_wrap').css({"opacity":"0"});
-	jQuery('.aboutblock .text_block_wrap').waypoint(function() {
-	  jQuery(this).addClass('animated fadeInUp');
-	}, { offset: '90%' });
 	  
 	//BLOCKS Animation
 	jQuery('.block_type2 .midrow_blocks .midrow_block').css({"opacity":"0"});
@@ -270,9 +266,7 @@ if (jQuery(window).width() < 480) {
 	
 	//Next-Previous Post Image Check
 	jQuery(".nav-box.ast-prev, .nav-box.ast-next").not(":has(img)").addClass('navbox-noimg');
-	
-	//Hide Footer if Empty
-	jQuery(".foot_soc").not(":has(i)").addClass('hide_footsoc');
+
 	
 	//Make sure the footer always stays to the bottom of the page when the page is short
 	var docHeight = jQuery(window).height();
@@ -280,4 +274,48 @@ if (jQuery(window).width() < 480) {
 	var footerTop = jQuery('#footer').position().top + footerHeight;
 	   
 	if (footerTop < docHeight) {  jQuery('#footer').css('margin-top', 1 + (docHeight - footerTop) + 'px');  }
+
+	
+	//Woocommerce
+	jQuery('.lay1.optimposts, .lay4.optimposts').each(function(index, element) {  jQuery(this).waitForImages(function() { jQuery(this).find('.type-product').matchHeight({property: 'min-height'});  });  });
+	jQuery('.lay1.optimposts .type-product').each(function(index, element) {
+		if (jQuery(window).width() >= 960) {	jQuery(this).find('.button.add_to_cart_button').prependTo(jQuery(this).find('.imgwrap'));  }
+		jQuery(this).find('span.price').prependTo(jQuery(this).find('.post_image '));
+    });
+
 });
+
+	jQuery(window).on('load scroll', function() {
+			var scrollTop = jQuery(this).scrollTop();
+			
+			var hheight = jQuery(".header").height() + jQuery('.admin-bar #wpadminbar').height() + jQuery('#customizer_topbar').height();
+				
+			if ( !scrollTop ) {
+					jQuery('body:not(.has_trans_header) .stat_bg img').css({"top":hheight+"px"});
+					jQuery('body:not(.has_trans_header) .stat_bg').css({"background-position-y":hheight+"px"});
+			}else{
+					jQuery('body:not(.has_trans_header) .stat_bg img').css({"top":"0px"});
+					jQuery('body:not(.has_trans_header) .stat_bg').css({"background-position-y":"0px"});
+			}
+				
+	});
+	
+//Check If IOS & SAFARI
+function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  if( userAgent.match( /iPad/i ) || userAgent.match( /iPhone/i ) || userAgent.match( /iPod/i ) )
+  {	return 'iOS'; }
+}
+var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+
+//IF iOS, Hide the video slider:
+if(getMobileOperatingSystem() == 'iOS'){
+		jQuery('body').addClass('is-ios');
+}else{
+		jQuery('body').addClass('not-ios');
+}
+
+//Check If Safari
+if(isSafari == true){
+		jQuery('body').addClass('is_safari');
+}

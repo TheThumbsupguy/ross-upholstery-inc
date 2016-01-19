@@ -28,9 +28,9 @@ function optimizer_first_image() {
 		return;
 	}
 	global $wp_query;
-	if( $wp_query->post_count <1){
+/*	if( $wp_query->post_count <1){
 		return;
-	}
+	}*/
 		global $post, $posts;
 		$image_url = '';
 		ob_start();
@@ -123,4 +123,100 @@ function optimizer_hex2rgb($hex) {
    $rgb = array($r, $g, $b);
    return implode(",", $rgb); // returns the rgb values separated by commas
    //return $rgb; // returns an array with the rgb values
+}
+
+/*Optimizer Color Sanitization*/
+function optimizer_sanitize_hex( $color = '#FFFFFF', $hash = true ) {
+		$color = trim( $color );
+		$color = str_replace( '#', '', $color );
+		if ( 3 == strlen( $color ) ) {
+			$color = substr( $color, 0, 1 ) . substr( $color, 0, 1 ) . substr( $color, 1, 1 ) . substr( $color, 1, 1 ) . substr( $color, 2, 1 ) . substr( $color, 2, 1 );
+		}
+
+		$substr = array();
+		for ( $i = 0; $i <= 5; $i++ ) {
+			$default    = ( 0 == $i ) ? 'F' : ( $substr[$i-1] );
+			$substr[$i] = substr( $color, $i, 1 );
+			$substr[$i] = ( false === $substr[$i] || ! ctype_xdigit( $substr[$i] ) ) ? $default : $substr[$i];
+		}
+		$hex = implode( '', $substr );
+
+		return ( ! $hash ) ? $hex : '#' . $hex;
+
+}
+
+// allow script & iframe tag within posts
+function optimizer_allow_html( $allowedposttags ){
+	global $allowedposttags;
+    $allowedposttags['script'] = array(
+        'type' => true,
+        'src' => true,
+        'height' => true,
+        'width' => true,
+    );
+    $allowedposttags['form'] = array(
+        'id' => true,
+        'class' => true,
+        'action' => true,
+        'method' => true,
+        'name' => true,
+        'style' => true,
+        'target' => true,
+		'novalidate' => true,
+    );
+    $allowedposttags['input'] = array(
+        'id' => true,
+        'class' => true,
+        'name' => true,
+        'style' => true,
+        'placeholder' => true,
+		'tabindex' => true,
+		'type' => true,
+		'value' => true,
+    );
+    $allowedposttags['button'] = array(
+        'id' => true,
+        'class' => true,
+        'name' => true,
+        'style' => true,
+		'tabindex' => true,
+		'type' => true,
+		'value' => true,
+    );
+	
+
+    return $allowedposttags;
+}
+add_filter('wp_kses_allowed_html','optimizer_allow_html', 1);
+
+//**Return an ID of an attachment by searching the database with the file URL (Inexpensive query)**//
+function optimizer_attachment_id_by_url( $url ) {
+	$parsed_url  = explode( parse_url( WP_CONTENT_URL, PHP_URL_PATH ), $url );
+
+	$this_host = str_ireplace( 'www.', '', parse_url( home_url(), PHP_URL_HOST ) );
+	$file_host = str_ireplace( 'www.', '', parse_url( $url, PHP_URL_HOST ) );
+
+	if ( ! isset( $parsed_url[1] ) || empty( $parsed_url[1] ) || ( $this_host != $file_host ) ) {
+		return;
+	}
+
+	global $wpdb;
+	$attachment = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->prefix}posts WHERE guid RLIKE %s;", $parsed_url[1] ) );
+	return $attachment[0];
+}
+
+//Get Image alt from image src
+function optimizer_image_alt( $attachment ) {
+	$imgid = optimizer_attachment_id_by_url($attachment);
+	
+	if($imgid){
+		$imgaltraw = wp_prepare_attachment_for_js($imgid); 
+		$imgalt = $imgaltraw['alt'];
+		if(!empty($imgalt)){ $imgalt = 'alt="'.$imgaltraw['alt'].'"'; }
+		
+	}else{
+		$imgalt = '';
+	}
+	
+	return $imgalt;
 }

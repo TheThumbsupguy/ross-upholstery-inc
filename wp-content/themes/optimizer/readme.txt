@@ -2,7 +2,7 @@
 
 Demo Image and Screenshot image are from pixabay.com and is Licensed under CC0 licenses
 
-slide.jpg :		http://pixabay.com/en/home-office-notebook-home-couch-569153/
+slide.jpg :		https://unsplash.com/photos/6xqAK6oAeHA/
 welcome_textbg.jpg :	https://unsplash.com/photos/6xqAK6oAeHA/
 
 Images Created BY Layerthemes:
@@ -68,4 +68,9 @@ Licensed under the terms of the MIT license.
 
 Jquery matchHeight
 http://brm.io/jquery-match-height/
+Licensed under the terms of the MIT license.
+
+
+miniTip v1.5.3
+https://github.com/goldfire/miniTip
 Licensed under the terms of the MIT license.

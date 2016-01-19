@@ -13,7 +13,7 @@
                     <div <?php post_class(); ?> id="post-<?php the_ID(); ?>"> 
                         
                     <!--EDIT BUTTON START-->
-						<?php if ( is_user_logged_in() || is_admin() ) { ?>
+						<?php if ( is_user_logged_in() && is_admin() ) { ?>
                             <div class="edit_wrap">
                             	<a href="<?php echo get_edit_post_link(); ?>">
                             		<?php _e('Edit','optimizer'); ?>
@@ -27,8 +27,8 @@
                         
                             <h1 class="postitle entry-title"><?php the_title(); ?></h1>
                             <!--POST INFO START-->
-								<?php if (!empty ($optimizer['post_info_id'])) { ?>
-                                <div class="single_metainfo">
+								<?php if (!empty ($optimizer['post_info_id']) || is_customize_preview()) { ?>
+                                <div class="single_metainfo <?php if (empty($optimizer['post_info_id'])){ echo 'hide_singlemeta';}?>">
                                 	<!--DATE-->
                                     <i class="fa-calendar"></i><a class="comm_date post-date updated"><?php the_time( get_option('date_format') ); ?></a>
                                     <!--AUTHOR-->
@@ -50,7 +50,7 @@
                                 </div>
                                 	<div style="clear:both"></div>
                                 <div class="thn_post_wrap wp_link_pages">
-									<?php wp_link_pages('<p class="pages"><strong>'.__('Pages:').'</strong> ', '</p>', 'number'); ?>
+									<?php wp_link_pages('<p class="pages"><strong>'.__('Pages:', 'optimizer').'</strong> ', '</p>', 'number'); ?>
                                 </div>
                             <!--POST CONTENT END-->
                             
@@ -81,16 +81,18 @@
        
             <?php endif ?>
             
-				<?php if (!empty ($optimizer['post_nextprev_id'])) { ?>
+				<?php if (!empty ($optimizer['post_nextprev_id']) || is_customize_preview()) { ?>
 				<!--NEXT AND PREVIOUS POSTS START--> 
-                  <?php get_template_part('framework/core','nextprev'); ?>
+					<?php if ( get_post_status ( get_the_ID() ) !== 'private' ) { ?>
+							<?php get_template_part('framework/core','nextprev'); ?>
+                    <?php } ?>
                 <!--NEXT AND PREVIOUS POSTS END-->          
                 <?php }?>
 
 
             <!--COMMENT START: Calling the Comment Section. If you want to hide comments from your posts, remove the line below-->     
-				<?php if (!empty ($optimizer['post_comments_id'])) { ?>
-                    <div class="comments_template">
+				<?php if (!empty ($optimizer['post_comments_id']) || is_customize_preview()) { ?>
+                    <div class="comments_template <?php if (empty($optimizer['post_comments_id'])){ echo 'hide_comments'; }?>">
                         <?php comments_template('',true); ?>
                     </div>
                 <?php }?> 

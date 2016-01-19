@@ -8,9 +8,9 @@
  * 
  * @since Optimizer 1.0
  */
-global $optimizer;
 /*OPTION DEFAULTS*/ 
-$optimizer = get_option( 'optimizer', optimizer_option_defaults() );
+global $optimizer;
+$optimizer = optimizer_option_defaults();
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
@@ -25,7 +25,6 @@ $optimizer = get_option( 'optimizer', optimizer_option_defaults() );
 </head>
 
 <body <?php body_class();?>>
-
 <!--HEADER-->
 <div class="header_wrap layer_wrapper">
 	<?php get_template_part('template_parts/head','type1'); ?>

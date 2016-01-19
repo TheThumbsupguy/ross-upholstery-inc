@@ -11,7 +11,7 @@
 global $optimizer;?>
 
             <?php if ( is_active_sidebar( 'sidebar' ) ) : ?>
-                <div id="sidebar" class="home_sidebar <?php if(!empty($optimizer['hide_mob_rightsdbr'])){ echo 'mobile_hide_sidebar';} ?>">
+                <div id="sidebar" class="home_sidebar <?php if(!empty($optimizer['hide_mob_rightsdbr'])){ echo 'hide_mob_rightsdbr';} ?>">
                     <div class="widgets">  
                             <?php dynamic_sidebar('sidebar'); ?>
                      </div>
