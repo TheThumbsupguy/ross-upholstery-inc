@@ -23,9 +23,12 @@ class optimizer_front_Blocks extends WP_Widget {
 	
 	
 	function __construct() {
-		parent::__construct( 'optimizer_front_blocks', __( '&diams; Blocks Widget', 'optimizer' ), array(
+		if(is_customize_preview()){$widgetname = __( 'Blocks', 'optimizer' ); }else{ $widgetname = __( '&diams; Blocks Widget', 'optimizer' ); }
+		
+		parent::__construct( 'optimizer_front_blocks', $widgetname, array(
 			'classname'   => 'optimizer_front_blocks ast_blocks',
 			'description' => __( 'Optimizer Blocks Section widget', 'optimizer' ),
+			'customize_selective_refresh' => true,
 		) );
 		$this->alt_option_name = 'optimizer_front_blocks';
 		add_action('wp_enqueue_scripts', array(&$this, 'optimizer_blocks_enqueue_css'));
@@ -40,15 +43,15 @@ class optimizer_front_Blocks extends WP_Widget {
 		
 		extract( $args );
 		/* Our variables from the widget settings. */
-		$block1title = isset( $instance['block1title'] ) ? $instance['block1title'] : __('Lorem Ipsum', 'optimizer');
+		$block1title = isset( $instance['block1title'] ) ? wp_kses_post($instance['block1title']) : __('Lorem Ipsum', 'optimizer');
 		$block1img = isset( $instance['block1img'] ) ? esc_url($instance['block1img']) : '';
 		$block1content = isset( $instance['block1content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block1content'] ) : __('Lorem ipsum dolor sit amet, consectetur dol adipiscing elit. Nam nec rhoncus risus. In ultrices lacinia ipsum, posuere faucibus velit bibe.', 'optimizer');
 		
-		$block2title = isset( $instance['block2title'] ) ?  $instance['block2title'] : __('Lorem Ipsum', 'optimizer');
+		$block2title = isset( $instance['block2title'] ) ?  wp_kses_post($instance['block2title']) : __('Lorem Ipsum', 'optimizer');
 		$block2img = isset( $instance['block2img'] ) ? esc_url($instance['block2img']) : '';
 		$block2content = isset( $instance['block2content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block2content'] ) : __('Lorem ipsum dolor sit amet, consectetur dol adipiscing elit. Nam nec rhoncus risus. In ultrices lacinia ipsum, posuere faucibus velit bibe.', 'optimizer');
 		
-		$block3title = isset( $instance['block3title'] ) ? $instance['block3title'] : __('Lorem Ipsum', 'optimizer');
+		$block3title = isset( $instance['block3title'] ) ? wp_kses_post($instance['block3title']) : __('Lorem Ipsum', 'optimizer');
 		$block3img = isset( $instance['block3img'] ) ? esc_url($instance['block3img']) : '';
 		$block3content = isset( $instance['block3content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block3content'] ) : __('Lorem ipsum dolor sit amet, consectetur dol adipiscing elit. Nam nec rhoncus risus. In ultrices lacinia ipsum, posuere faucibus velit bibe.', 'optimizer');
 		
@@ -56,17 +59,17 @@ class optimizer_front_Blocks extends WP_Widget {
 		$block4img = isset( $instance['block4img'] ) ? esc_url($instance['block4img']) : '';
 		$block4content = isset( $instance['block4content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block4content'] ) : '';
 		
-		$block5title = isset( $instance['block5title'] ) ? $instance['block5title'] : '';
+		$block5title = isset( $instance['block5title'] ) ? wp_kses_post($instance['block5title']) : '';
 		$block5img = isset( $instance['block5img'] ) ? esc_url($instance['block5img']) : '';
 		$block5content = isset( $instance['block5content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block5content'] ) : '';
 		
-		$block6title = isset( $instance['block6title'] ) ? $instance['block6title'] : '';
+		$block6title = isset( $instance['block6title'] ) ? wp_kses_post($instance['block6title']) : '';
 		$block6img = isset( $instance['block6img'] ) ? esc_url($instance['block6img']) : '';
 		$block6content = isset( $instance['block6content'] ) ? apply_filters( 'wp_editor_widget_content', $instance['block6content'] ) : '';
 		
-		$blockstitlecolor = isset( $instance['blockstitlecolor'] ) ? $instance['blockstitlecolor'] : '';
-		$blockstxtcolor = isset( $instance['blockstxtcolor'] ) ? $instance['blockstxtcolor'] : '';
-		$blocksbgcolor = isset( $instance['blocksbgcolor'] ) ? $instance['blocksbgcolor'] : '';
+		$blockstitlecolor = isset( $instance['blockstitlecolor'] ) ? wp_kses_post($instance['blockstitlecolor']) : '';
+		$blockstxtcolor = isset( $instance['blockstxtcolor'] ) ? esc_html($instance['blockstxtcolor']) : '';
+		$blocksbgcolor = isset( $instance['blocksbgcolor'] ) ? esc_html($instance['blocksbgcolor']) : '';
 
 		/* Before widget (defined by themes). */
 		echo $before_widget;
@@ -230,27 +233,27 @@ class optimizer_front_Blocks extends WP_Widget {
 		$instance = $old_instance;
 
 		/* Strip tags for title and name to remove HTML (important for text inputs). */
-		$instance['block1title'] = strip_tags( $new_instance['block1title'] );
+		$instance['block1title'] = wp_kses_post( $new_instance['block1title'] );
 		$instance['block1img'] = esc_url_raw($new_instance['block1img']);
 		$instance['block1content'] = wp_kses_post($new_instance['block1content']);
 		
-		$instance['block2title'] = strip_tags( $new_instance['block2title'] );
+		$instance['block2title'] = wp_kses_post( $new_instance['block2title'] );
 		$instance['block2img'] = esc_url_raw($new_instance['block2img']);
 		$instance['block2content'] = wp_kses_post($new_instance['block2content']);
 		
-		$instance['block3title'] = strip_tags( $new_instance['block3title'] );
+		$instance['block3title'] = wp_kses_post( $new_instance['block3title'] );
 		$instance['block3img'] = esc_url_raw($new_instance['block3img']);
 		$instance['block3content'] = wp_kses_post($new_instance['block3content']);
 		
-		$instance['block4title'] = strip_tags( $new_instance['block4title'] );
+		$instance['block4title'] = wp_kses_post( $new_instance['block4title'] );
 		$instance['block4img'] = esc_url_raw($new_instance['block4img']);
 		$instance['block4content'] = wp_kses_post($new_instance['block4content']);
 		
-		$instance['block5title'] = strip_tags( $new_instance['block5title'] );
+		$instance['block5title'] = wp_kses_post( $new_instance['block5title'] );
 		$instance['block5img'] = esc_url_raw($new_instance['block5img']);
 		$instance['block5content'] = wp_kses_post($new_instance['block5content']);
 		
-		$instance['block6title'] = strip_tags( $new_instance['block6title'] );
+		$instance['block6title'] = wp_kses_post( $new_instance['block6title'] );
 		$instance['block6img'] = esc_url_raw($new_instance['block6img']);
 		$instance['block6content'] = wp_kses_post($new_instance['block6content']);
 		
@@ -508,35 +511,28 @@ class optimizer_front_Blocks extends WP_Widget {
 		<!-- Blocks Title Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'blockstitlecolor' ); ?>"><?php _e('Blocks Title Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blockstitlecolor' ); ?>" name="<?php echo $this->get_field_name( 'blockstitlecolor' ); ?>" value="<?php echo $instance['blockstitlecolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blockstitlecolor' ); ?>" name="<?php echo $this->get_field_name( 'blockstitlecolor' ); ?>" value="<?php echo esc_attr($instance['blockstitlecolor']); ?>" type="text" />
 		</p>
         
 		
 		<!-- Blocks Text Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'blockstxtcolor' ); ?>"><?php _e('Blocks Text Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blockstxtcolor' ); ?>" name="<?php echo $this->get_field_name( 'blockstxtcolor' ); ?>" value="<?php echo $instance['blockstxtcolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blockstxtcolor' ); ?>" name="<?php echo $this->get_field_name( 'blockstxtcolor' ); ?>" value="<?php echo esc_attr($instance['blockstxtcolor']); ?>" type="text" />
 		</p>
                 
         <!-- Blocks Background Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'blocksbgcolor' ); ?>"><?php _e('Blocks Background Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blocksbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'blocksbgcolor' ); ?>" value="<?php echo $instance['blocksbgcolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'blocksbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'blocksbgcolor' ); ?>" value="<?php echo esc_attr($instance['blocksbgcolor']); ?>" type="text" />
 		</p>
-        
-        <!-- Blocks Content Background Color Field -->
-		<p class="widget_upgrade">
-			<label for="<?php echo $this->get_field_id( 'content_bg' ); ?>"><?php _e('Background Image', 'optimizer') ?></label>
-            <small><strong><?php _e('Available in PRO version', 'optimizer') ?></strong></small>
-			
-		</p> 
 		
 
 <?php
 	}
 		//ENQUEUE CSS
         function optimizer_blocks_enqueue_css() {
-		$settings = $this->get_settings();
+		$settings = get_option( $this->option_name );
 
 		if ( empty( $settings ) ) {
 			return;
@@ -554,13 +550,13 @@ class optimizer_front_Blocks extends WP_Widget {
 			$blockstxtcolor =		'color:#999999;';
 			
 			if ( ! empty( $instance['blocksbgcolor'] ) ) {
-				$blocksbgcolor = 'background-color: ' . $instance['blocksbgcolor'] . '; ';
+				$blocksbgcolor = 'background-color: ' . esc_html($instance['blocksbgcolor']) . '; ';
 			}
 			if ( ! empty( $instance['blockstitlecolor'] ) ) {
-				$blockstitlecolor = '' . $instance['blockstitlecolor'] . '; ';
+				$blockstitlecolor = '' . esc_html($instance['blockstitlecolor']) . '; ';
 			}
 			if ( ! empty( $instance['blockstxtcolor'] ) ) {
-				$blockstxtcolor = 'color: ' . $instance['blockstxtcolor'] . '; ';
+				$blockstxtcolor = 'color: ' . esc_html($instance['blockstxtcolor']) . '; ';
 			}
 			
 			

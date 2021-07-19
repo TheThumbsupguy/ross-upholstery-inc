@@ -1,10 +1,49 @@
 // AJAX POST PAGINATION
 
 	jQuery(function() {
+
+      jQuery('.widget .ast_pagenav').each(function(index, element) {
+			if(jQuery(this).data('query-max') >= 10){
+            jQuery(this).find('.page-numbers:nth-child(1), .page-numbers:nth-child(2), .page-numbers:nth-child(3), .page-numbers:nth-child(1), .page-numbers:nth-child(3), .page-numbers:nth-last-child(3), .page-numbers:nth-last-child(2), .page-numbers:nth-last-child(1)').addClass('pagi_visible');
+				jQuery( this ).find('.page-numbers:nth-last-child(3)').before('<span class="pagi_dots">....</span>');
+			}else{
+				jQuery( this ).find('.page-numbers').addClass('pagi_visible');
+			}
+      });
 		
 		jQuery( '.ast_pagenav .page-numbers, #nav-below a, .ast_navigation i' ).on( "click", function(e) {
 		e.preventDefault();
-		jQuery( this ).siblings().removeClass('current');jQuery( this ).addClass('current');
+		//Numbered Pagination Enhancement
+      if(jQuery(this).parent().data('query-max') >= 10){
+         jQuery( this ).siblings().not('.page-numbers:nth-last-child(3), .page-numbers:nth-last-child(2), .page-numbers:nth-last-child(1)').removeClass('current current-next current-prev pagi_visible');
+         jQuery( this ).parent().find('.pagi_dots').remove();
+         jQuery( this ).addClass('current');
+         jQuery( this ).next('.page-numbers').addClass('current-next pagi_visible');
+         jQuery( this ).prev('.page-numbers').prev('.page-numbers').addClass('current-prev pagi_visible'); 
+         jQuery( this ).prev('.page-numbers').addClass('current-prev pagi_visible'); 
+         jQuery( this ).next('.page-numbers').after('<span class="pagi_dots">....</span>');
+         
+         if(jQuery( this ).is('.page-numbers:nth-last-child(1), .page-numbers:nth-last-child(2), .page-numbers:nth-last-child(3), .page-numbers:nth-last-child(4), .page-numbers:nth-last-child(5)')){
+            jQuery( this ).siblings().removeClass('current');
+            jQuery( this ).addClass('current');
+            jQuery( this ).parent().find('.pagi_dots').remove();
+            jQuery( this ).parent().find('.page-numbers:nth-last-child(4)').before('<span class="pagi_dots">....</span>');
+         }
+         if(jQuery( this ).is('.page-numbers:nth-last-child(1), .page-numbers:nth-last-child(2)')){
+            jQuery( this ).siblings().removeClass('current current-next current-prev pagi_visible');
+            jQuery( this ).parent().find('.pagi_dots').remove();
+            jQuery( this ).addClass('current');
+            jQuery( this ).next('.page-numbers').addClass('current-next pagi_visible');
+            jQuery( this ).prev('.page-numbers').addClass('current-prev pagi_visible'); 
+            jQuery( this ).prev('.page-numbers').prev('.page-numbers').prev('.page-numbers').prev('.page-numbers').addClass('current-prev pagi_visible');
+            jQuery( this ).prev('.page-numbers').prev('.page-numbers').prev('.page-numbers').addClass('current-prev pagi_visible');
+            jQuery( this ).prev('.page-numbers').prev('.page-numbers').addClass('current-prev pagi_visible');  
+            jQuery( this ).parent().find('.page-numbers:nth-last-child(3)').before('<span class="pagi_dots">....</span>');
+         }
+      }else{
+         jQuery( this ).siblings().removeClass('current');
+         jQuery( this ).addClass('current');
+   }
 		
 		var pagi = jQuery(this).parentsUntil('.optimposts').parent();
 		var ajaxurl = postsq.ajaxurl;
@@ -108,42 +147,16 @@
 					}
 				});
 				
-	jQuery('.lay1.optimposts, .lay4.optimposts').each(function(index, element) {  jQuery(this).waitForImages(function() { jQuery(this).find('.type-product').matchHeight({ property: 'min-height'});  });  });
+	jQuery('.lay1.optimposts, .lay2.optimposts, .lay4.optimposts').each(function(index, element) {  jQuery(this).waitForImages(function() { jQuery(this).find('.type-product').matchHeight({ property: 'min-height'});  }); });
 	jQuery('.lay1.optimposts .type-product').each(function(index, element) {
 		jQuery(this).find('.button.add_to_cart_button').prependTo(jQuery(this).find('.imgwrap'));
 		jQuery(this).find('span.price').prependTo(jQuery(this).find('.post_image '));
     });
-		
 				
 				//FrontPage Post Image Zoom	
 				jQuery(".imgzoom[href$='.jpg'], .imgzoom[href$='.png'], .imgzoom[href$='.gif']").magnificPopup({type:'image',image: {titleSrc: 'data-title'}});
 				
-				//LAYOUT 3 MASONRY
-				if(layout == 3 && ( navigation == 'numbered' || navigation == 'oldnew')){
-						var container = jQuery(this).parentsUntil('.optimposts').find('.lay3_wrap_ajax');
-						console.log(container);
-						//Layout3 Masonry
-						var msnry;
-						imagesLoaded( container, function() {
-							container.masonry({
-						  // options
-						  itemSelector: '.hentry'
-						});
-						});
-				}
-				//LAYOUT 3 MASONRY with Infinite Scroll
-				if(layout == 3 && navigation == 'infscroll'){
-					var container = jQuery(this).parentsUntil('.optimposts').find('.lay3_wrap_ajax');
-						imagesLoaded( container, function() {
-							container.masonry({
-						  // options
-						  itemSelector: '.hentry'
-						});
-						});
-						jQuery(this).parentsUntil('.optimposts').find('.lay3_wrap').css({"height":"auto"});
 
-				}
-				
 				
 			 });
 		

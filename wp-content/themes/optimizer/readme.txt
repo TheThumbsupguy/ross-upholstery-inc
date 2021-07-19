@@ -1,76 +1,76 @@
+-------------------------------------------------------
+Image Credits:
+-------------------------------------------------------
+upgrade_banner.jpg/Used as Slider Image : CC0, https://www.pexels.com/photo/altitude-clouds-cold-daylight-417173/
+slide_icon.png :	Created by OptimizerWP and released under GPL v2
 
-
-Demo Image and Screenshot image are from pixabay.com and is Licensed under CC0 licenses
-
-slide.jpg :		https://unsplash.com/photos/6xqAK6oAeHA/
-welcome_textbg.jpg :	https://unsplash.com/photos/6xqAK6oAeHA/
-
-Images Created BY Layerthemes:
--------------------------------
-upgrade_banner.jpg :	Created by Layerthemes and released under GPL v2
-slide_icon.png :	Created by Layerthemes and released under GPL v2
-
+All other images in the theme are created by OptimizerWP team and released under GPL v2
 
 -------------------------------------------------------
-Credits:
+Fonts, CSS, Javascripts Credits:
 -------------------------------------------------------
-Font Awesome
-http://fortawesome.github.io/Font-Awesome/license/
-License: SIL OFL 1.1
+Font Awesome v4.6.1 (FONT) http://fortawesome.github.io/Font-Awesome/license/
+Copyright 2014, Dave Gandy, OFL 1.1 http://scripts.sil.org/OFL
 
-Animate.css 
-http://daneden.me/animate
-Licensed under the MIT license - http://opensource.org/licenses/MIT
-
-The Final Countdown for jQuery
-http://hilios.github.io/jQuery.countdown/
-Licensed under the MIT License.
-
-jQuery Easing
-http://gsgd.co.uk/sandbox/jquery/easing/
-Licensed under the BSD License.
-
-Magnific Popup
-http://dimsemenov.com/plugins/magnific-popup/
-Licensed under the MIT License.
-
-jQuery Waypoints
-https://github.com/imakewebthings/jquery-waypoints/
-Licensed under the MIT license.
-
-Sidr
-https://github.com/artberri/sidr
-Licensed under the MIT license.
-
-waitForImages jQuery Plugin
-https://github.com/alexanderdickson/waitForImages
-Licensed under the MIT license.
-
-pace
-https://github.com/HubSpot/pace/
-Licensed under the MIT license.
-
-jQuery Parallax
-http://www.ianlunn.co.uk/plugins/jquery-parallax/
-Dual licensed under the MIT and GPL licenses
-
-HTML5 Placeholder jQuery Plugin
-https://github.com/mathiasbynens/jquery-placeholder
-Licensed under the MIT license.
-
-jQuery Nivo Slider
-http://nivo.dev7studios.com
-Licensed under the MIT license.
-
-SmoothScroll for websites v1.2.1
-https://gist.github.com/galambalazs/6477177/
-Licensed under the terms of the MIT license.
-
-Jquery matchHeight
-http://brm.io/jquery-match-height/
-Licensed under the terms of the MIT license.
+Font Awesome v4.6.1 (CSS)  http://fortawesome.github.io/Font-Awesome/license/
+Copyright 2014, Dave Gandy, MIT license - http://opensource.org/licenses/MIT
 
 
-miniTip v1.5.3
-https://github.com/goldfire/miniTip
-Licensed under the terms of the MIT license.
+
+jQuery Easing  v1.3  http://gsgd.co.uk/sandbox/jquery/easing/
+Copyright 2012, George Smith, BSD License, https://opensource.org/licenses/bsd-license.php
+
+
+Magnific Popup v0.9.9 http://dimsemenov.com/plugins/magnific-popup/
+Copyright 2014, Dmitry Semenov, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+
+jQuery Waypoints v2.0.5 https://github.com/imakewebthings/waypoints
+Copyright 2014, Caleb Troughton, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+Sidr v1.1.1 https://github.com/artberri/sidr
+Copyright 2015, Alberto Varela, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+waitForImages jQuery Plugin v2.1.0 https://github.com/alexanderdickson/waitForImages
+Copyright 2014, Alex Dickson, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+pace v1.0.2 https://github.com/HubSpot/pace/
+Copyright 2013, HubSpot, Inc., MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+HTML5 Placeholder jQuery Plugin v2.1.0 https://github.com/mathiasbynens/jquery-placeholder
+Copyright 2014, Mathias Bynens, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+SmoothScroll for websites v1.2.1 https://github.com/galambalazs/smoothscroll-for-websites
+Copyright 2015, Balazs Galambosi, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+Jquery matchHeight http://brm.io/jquery-match-height/
+Copyright 2014, liabru, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+miniTip v1.5.3 http://goldfirestudios.com
+Copyright 2011, James Simpson, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+jQuery Nivo Slider v3.2, http://nivo.dev7studios.com
+Copyright 2012, Dev7studios, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+Unveil v1.5.3 http://luis-almeida.github.com/unveil
+Copyright 2013, Luis Almeida, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+FileSaver.js v3.2, https://github.com/eligrey/FileSaver.js/
+Copyright 2016, Eli Grey, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+
+Fotorama v4.5.1, https://github.com/eligrey/FileSaver.js/
+Copyright 2016, Artem Polikarpov, MIT License, http://www.opensource.org/licenses/mit-license.php
+
+

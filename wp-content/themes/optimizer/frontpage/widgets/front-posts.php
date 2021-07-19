@@ -28,9 +28,12 @@ class optimizer_front_Posts extends WP_Widget {
 	/* ---------------------------- */
 
 	function __construct() {
-		parent::__construct( 'optimizer_front_posts', __( '&diams; Posts Widget', 'optimizer' ), array(
+		if(is_customize_preview()){$widgetname = __( 'Posts', 'optimizer' ); }else{ $widgetname = __( '&diams; Posts Widget', 'optimizer' ); }
+		
+		parent::__construct( 'optimizer_front_posts', $widgetname, array(
 			'classname'   => 'optimizer_front_posts postsblck',
 			'description' => __( 'This Widget lets you display WordPress Posts, Pages and Woocommerce Products.', 'optimizer' ),
+			'customize_selective_refresh' => true,
 		) );
 		$this->alt_option_name = 'optimizer_front_posts';
 		add_action('wp_enqueue_scripts', array(&$this, 'optimizer_posts_enqueue_css'));
@@ -45,18 +48,18 @@ class optimizer_front_Posts extends WP_Widget {
 		
 		extract( $args );
 		/* Our variables from the widget settings. */
-		$title = isset( $instance['title'] ) ? $instance['title'] : __('Our Work', 'optimizer');
-		$subtitle = isset( $instance['subtitle'] ) ? $instance['subtitle'] : __('Check Out Our Portfolio', 'optimizer');
+		$title = isset( $instance['title'] ) ? wp_kses_post($instance['title']) : __('Our Work', 'optimizer');
+		$subtitle = isset( $instance['subtitle'] ) ? wp_kses_post($instance['subtitle']) : __('Check Out Our Portfolio', 'optimizer');
 		$layout = isset( $instance['layout'] ) ? absint($instance['layout']) : '1';
-		$type = isset( $instance['type'] ) ? $instance['type'] : 'post';
+		$type = isset( $instance['type'] ) ? esc_attr($instance['type']) : 'post';
 		$count = isset( $instance['count'] ) ? absint($instance['count']) : '6';
-		$category = isset( $instance['category'] ) ? $instance['category'] : '';
+		$category = isset( $instance['category'] ) ? $instance['category'] : array();
 		
-		$divider = isset( $instance['divider'] ) ? apply_filters('widget_title', $instance['divider']) : 'fa-stop';
-		$navigation = isset( $instance['navigation'] ) ? $instance['navigation'] : 'numbered';
-		$postbgcolor = isset( $instance['postbgcolor'] ) ? $instance['postbgcolor'] : '';
-		$titlecolor = isset( $instance['titlecolor'] ) ? $instance['titlecolor'] : '';
-		$secbgcolor = isset( $instance['secbgcolor'] ) ? $instance['secbgcolor'] : '';
+		$divider = isset( $instance['divider'] ) ? apply_filters('widget_title', $instance['divider'], $this->id_base) : 'fa-stop';
+		$navigation = isset( $instance['navigation'] ) ? esc_html($instance['navigation']) : 'numbered';
+		$postbgcolor = isset( $instance['postbgcolor'] ) ? esc_html($instance['postbgcolor']) : '';
+		$titlecolor = isset( $instance['titlecolor'] ) ? esc_html($instance['titlecolor']) : '';
+		$secbgcolor = isset( $instance['secbgcolor'] ) ? esc_html($instance['secbgcolor']) : '';
 		
 
 		/* Before widget (defined by themes). */
@@ -65,8 +68,8 @@ class optimizer_front_Posts extends WP_Widget {
 			if(is_customize_preview()) echo '<span class="widgetname">'.$this->name.'</span>';
 			
 			//THE QUERY
-			if(!empty($category) && $type == 'post'){	$blogcat = $category;	$blogcats =implode(',', $blogcat);	}else{	$blogcats = '';	}
-		
+			if(!empty($category) && $type == 'post'){	$blogcat = array_map( 'esc_html', $category );	$blogcats =implode(',', $blogcat);	}else{	$blogcats = '';	}
+			
 		echo '<div class="postlayout_'.$layout.'">
 		<div class="lay'.$layout.' optimposts" data-post-layout="'.$layout.'" data-post-type="'.$type.'" data-post-count="'.$count.'" data-post-category="'.$blogcats.'" data-post-navigation="'.$navigation.'">
 		<div class="center">';
@@ -76,7 +79,8 @@ class optimizer_front_Posts extends WP_Widget {
                 if($subtitle) { echo '<div class="home_subtitle">'.do_shortcode($subtitle).'</div>'; }
 				if ( $divider ){
 					if( $divider !== 'no_divider'){
-							echo '<div class="optimizer_divider"><span class="div_left"></span><span class="div_middle"><i class="fa '.$divider.'"></i></span><span class="div_right"></span></div>';
+							if($divider == 'underline'){ $underline= 'title_underline';}else{$underline='';}
+							echo '<div class="optimizer_divider '.$underline.'"><span class="div_left"></span><span class="div_middle"><i class="fa '.$divider.'"></i></span><span class="div_right"></span></div>';
 					}
 				}
             echo '</div>';
@@ -105,20 +109,20 @@ class optimizer_front_Posts extends WP_Widget {
 		$instance = $old_instance;
 
 		/* Strip tags for title and name to remove HTML (important for text inputs). */
-		$instance['title'] = strip_tags( $new_instance['title'] );
+		$instance['title'] = wp_kses_post( $new_instance['title'] );
 		
 		/* No need to strip tags */
-		$instance['subtitle'] = strip_tags( $new_instance['subtitle'] );
-		$instance['layout'] = strip_tags($new_instance['layout']);
-		$instance['type'] = strip_tags($new_instance['type']);
-		$instance['count'] = strip_tags($new_instance['count']);
+		$instance['subtitle'] = wp_kses_post( $new_instance['subtitle'] );
+		$instance['layout'] = esc_html($new_instance['layout']);
+		$instance['type'] = esc_html($new_instance['type']);
+		$instance['count'] = esc_html($new_instance['count']);
 		$instance['category'] = $new_instance['category'];
 		
-		$instance['divider'] = strip_tags($new_instance['divider']);
-		$instance['navigation'] = strip_tags($new_instance['navigation']);
-		$instance['postbgcolor'] = strip_tags($new_instance['postbgcolor']);
-		$instance['titlecolor'] = strip_tags($new_instance['titlecolor']);
-		$instance['secbgcolor'] = strip_tags($new_instance['secbgcolor']);
+		$instance['divider'] = esc_html($new_instance['divider']);
+		$instance['navigation'] = esc_html($new_instance['navigation']);
+		$instance['postbgcolor'] = optimizer_sanitize_hex($new_instance['postbgcolor']);
+		$instance['titlecolor'] = optimizer_sanitize_hex($new_instance['titlecolor']);
+		$instance['secbgcolor'] = optimizer_sanitize_hex($new_instance['secbgcolor']);
 
 		return $instance;
 	}
@@ -169,6 +173,7 @@ class optimizer_front_Posts extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'layout' ); ?>"><?php _e('Posts Layout:', 'optimizer') ?></label>
 			<select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo $this->get_field_name( 'layout' ); ?>" class="widefat">
 				<option value="1" <?php if ( '1' == $instance['layout'] ) echo 'selected="selected"'; ?>><?php _e('Layout 1', 'optimizer') ?></option>
+                <option value="2" <?php if ( '2' == $instance['layout'] ) echo 'selected="selected"'; ?>><?php _e('Layout 2', 'optimizer') ?></option>
                 <option value="4" <?php if ( '4' == $instance['layout'] ) echo 'selected="selected"'; ?>><?php _e('Layout 4', 'optimizer') ?></option>
 			</select>
             <small><?php _e('3 more layouts available in PRO', 'optimizer') ?></small>
@@ -205,7 +210,7 @@ class optimizer_front_Posts extends WP_Widget {
         
 		<p>
 			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e('Number of Posts:', 'optimizer') ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" value="<?php echo $instance['count']; ?>" type="text" />
+			<input class="widefat" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>" value="<?php echo esc_attr($instance['count']); ?>" type="text" />
 		</p>
 
         
@@ -214,6 +219,7 @@ class optimizer_front_Posts extends WP_Widget {
         <p>
 			<label for="<?php echo $this->get_field_id( 'divider' ); ?>"><?php _e('Title Divider:', 'optimizer') ?></label>
 			<select id="<?php echo $this->get_field_id( 'divider' ); ?>" name="<?php echo $this->get_field_name( 'divider' ); ?>" class="widefat">
+            	<option value="underline" <?php if ( 'underline' == $instance['divider'] ) echo 'selected="selected"'; ?>><?php _e('Underline', 'optimizer') ?></option>
 				<option value="fa-stop" <?php if ( 'fa-stop' == $instance['divider'] ) echo 'selected="selected"'; ?>><?php _e('Rhombus', 'optimizer') ?></option>
 				<option value="fa-star" <?php if ( 'fa-star' == $instance['divider'] ) echo 'selected="selected"'; ?>><?php _e('Star', 'optimizer') ?></option>
                 <option value="fa-times" <?php if ( 'fa-times' == $instance['divider'] ) echo 'selected="selected"'; ?>><?php _e('Cross', 'optimizer') ?></option>
@@ -245,28 +251,22 @@ class optimizer_front_Posts extends WP_Widget {
         <!-- Posts Backgrounnd Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'postbgcolor' ); ?>"><?php _e('Post Background Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'postbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'postbgcolor' ); ?>" value="<?php echo $instance['postbgcolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'postbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'postbgcolor' ); ?>" value="<?php echo esc_attr($instance['postbgcolor']); ?>" type="text" />
 		</p>
         
         
         <!-- Posts Section Title Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'titlecolor' ); ?>"><?php _e('Posts Section Title Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'titlecolor' ); ?>" name="<?php echo $this->get_field_name( 'titlecolor' ); ?>" value="<?php echo $instance['titlecolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'titlecolor' ); ?>" name="<?php echo $this->get_field_name( 'titlecolor' ); ?>" value="<?php echo esc_attr($instance['titlecolor']); ?>" type="text" />
 		</p>
         
         <!-- Posts Section Background Color Field -->
 		<p>
 			<label for="<?php echo $this->get_field_id( 'secbgcolor' ); ?>"><?php _e('Posts Section Background Color', 'optimizer') ?></label>
-			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'secbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'secbgcolor' ); ?>" value="<?php echo $instance['secbgcolor']; ?>" type="text" />
+			<input class="widefat color-picker" id="<?php echo $this->get_field_id( 'secbgcolor' ); ?>" name="<?php echo $this->get_field_name( 'secbgcolor' ); ?>" value="<?php echo esc_attr($instance['secbgcolor']); ?>" type="text" />
 		</p>
         
-        <!-- Posts Background Image Field -->
-		<p class="widget_upgrade">
-			<label for="<?php echo $this->get_field_id( 'content_bg' ); ?>"><?php _e('Background Image', 'optimizer') ?></label>
-            <small><strong><?php _e('Available in PRO version', 'optimizer') ?></strong></small>
-			
-		</p> 
 
 <?php
 	}
@@ -288,16 +288,16 @@ class optimizer_front_Posts extends WP_Widget {
 			$postbgcolor =		'';
 			$titlecolor =		'#333333;';
 			$secbgcolor =		'background-color:#ffffff;';
-			if ( ! empty( $instance['layout'] ) ) {$layout = $instance['layout'];  }else{$layout = '1';}
+			if ( ! empty( $instance['layout'] ) ) {$layout = esc_html($instance['layout']);  }else{$layout = '1';}
 			
 			if ( ! empty( $instance['postbgcolor'] ) ) {
-				$postbgcolor = 'background-color: ' . $instance['postbgcolor'] . '; ';
+				$postbgcolor = 'background-color: ' . esc_html($instance['postbgcolor']) . '; ';
 			}
 			if ( ! empty( $instance['titlecolor'] ) ) {
 				$titlecolor =  $instance['titlecolor'] . '; ';
 			}
 			if ( ! empty( $instance['secbgcolor'] ) ) {
-				$secbgcolor = 'background-color: ' . $instance['secbgcolor'] . '; ';
+				$secbgcolor = 'background-color: ' . esc_html($instance['secbgcolor']) . '; ';
 			}
 
 			

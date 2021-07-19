@@ -43,39 +43,6 @@ $wp_customize->add_setting( 'optimizer[static_image_id][url]',array(
 			);
 
 			
-//Static Slider Gallery
-$wp_customize->add_setting( 'optimizer[static_gallery]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'static_gallery', array(
-					'type' => 'info',
-					'label' => __('You Can only Add Slideshow Images in the PRO version.','optimizer'),
-					'section' => 'slider_section',
-					'settings'    => 'optimizer[static_gallery]',
-			)) );
-			
-
-//Static Slide Background Video
-$wp_customize->add_setting( 'optimizer[static_video_id][url]',array( 
-	'type' => 'option',
-	'default' => '',
-	'sanitize_callback' => 'sanitize_key',
-	)
-);
-
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'static_video_id',array(
-					'type' => 'info',
-					'label'       => __( 'You Can only Add Video Background in the PRO version.', 'optimizer' ),
-					'section'     => 'slider_section',
-					'settings'    => 'optimizer[static_video_id][url]'
-						)
-					)
-			);
-			
-			
 
 //Static Slide Content
 $wp_customize->add_setting( 'optimizer[static_img_text_id]', array(
@@ -344,7 +311,21 @@ $wp_customize->add_setting( 'optimizer[slider_content_align]', array(
 						'right'=> __('Right', 'optimizer'),
 					),
 					'settings'    => 'optimizer[slider_content_align]'
-			) );
+         ) );
+         
+//Disable Static Slider Parallax Effect
+$wp_customize->add_setting('optimizer[disable_slider_parallax]', array(
+	'type' => 'option',
+	'default' => '',
+	'sanitize_callback' => 'optimizer_sanitize_checkbox',
+	'transport' => 'refresh',
+) );
+			$wp_customize->add_control( new Optimizer_Controls_Toggle_Control( $wp_customize, 'disable_slider_parallax', array(
+				'label' => __('Disable Parallax Effect','optimizer'),
+				'section' => 'slider_section',
+				'settings' => 'optimizer[disable_slider_parallax]',
+			)) );
+
 
 //---------------SLIDER CALLBACK-------------------//
 function optimizer_slider_static( $control ) {

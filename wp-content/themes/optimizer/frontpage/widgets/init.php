@@ -8,7 +8,7 @@ require(get_template_directory() . '/frontpage/widgets/front-text.php');
 require(get_template_directory() . '/frontpage/widgets/front-posts.php');
 
 
-//Frontpage widget area assing function. This function assign Optimizer frontpage widgets on frontpage widget area on theme activation.
+//Frontpage widget area assign function. This function assign Optimizer frontpage widgets on frontpage widget area on theme activation.
 function optimizer_assign_widgets() {
 	$optimizer = get_option('optimizer');
 	$active_widgets = get_option( 'sidebars_widgets' );
@@ -111,4 +111,3 @@ if(empty($active_widgets['front_sidebar']) && empty($optimizer)){
 }
 }
 add_action( 'init', 'optimizer_assign_widgets' );
-//add_action('after_switch_theme', 'optimizer_assign_widgets');

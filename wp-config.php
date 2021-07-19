@@ -1,4 +1,7 @@
 <?php
+// BEGIN A2 CONFIG
+define('DISALLOW_FILE_EDIT', true);
+// END A2 CONFIG
 /** Enable W3 Total Cache */
 define('WP_CACHE', true); // Added by W3 Total Cache
 

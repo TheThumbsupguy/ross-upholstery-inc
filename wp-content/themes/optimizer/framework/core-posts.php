@@ -1,6 +1,6 @@
 <?php
 
-function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='post', $optimizer_posts_count='6', $category='', $navigation='numbered'){
+function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='post', $optimizer_posts_count='6', $category=array(), $navigation='numbered'){
 ?>
 	<?php  
 	if(!empty($category) && $optimizer_posts_type == 'post'){	$blogcat = $category;	$optimizer_posts_blogcats =implode(',', $blogcat);	}else{	$optimizer_posts_blogcats = '';	}
@@ -50,9 +50,9 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
                           
                           <div class="imgwrap">    
                               <div class="icon_wrap animated fadeInUp">
-                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php echo _e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
 
-                              		<a href="<?php the_permalink();?>" title="<?php echo _e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                               </div>                 
                           <a href="<?php the_permalink();?>"><?php the_post_thumbnail('optimizer_thumb'); ?></a>
                           </div>
@@ -61,8 +61,8 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
                           <?php elseif(!optimizer_gallery_thumb() == ''): ?>
                           <div class="imgwrap">       
                               <div class="icon_wrap animated fadeInUp">
-                                	<a class="imgzoom" href="<?php echo optimizer_gallery_thumb('optimizer_thumb'); ?>" title="<?php echo _e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
-                              		<a href="<?php the_permalink();?>" title="<?php echo _e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                                	<a class="imgzoom" href="<?php echo optimizer_gallery_thumb('optimizer_thumb'); ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                               </div>            
                           <a href="<?php the_permalink();?>"><img alt="<?php the_title(); ?>" src="<?php echo optimizer_gallery_thumb('optimizer_thumb'); ?>" /></a>		
                           </div>
@@ -70,8 +70,8 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
                           <?php elseif(!optimizer_first_image() == ''): ?>
                           <div class="imgwrap">       
                               <div class="icon_wrap animated fadeInUp">
-                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php echo _e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
-                              		<a href="<?php the_permalink();?>" title="<?php echo _e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                               </div>            
                           <a href="<?php the_permalink();?>"><img alt="<?php the_title(); ?>" src="<?php echo optimizer_first_image('optimizer_thumb'); ?>" /></a>		
                           </div>
@@ -79,7 +79,7 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
                           <?php else : ?>
                           <div class="imgwrap">
 							<div class="icon_wrap animated fadeInUp">
-                              		<a href="<?php the_permalink();?>" title="<?php echo _e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                             </div>
                           <a href="<?php the_permalink();?>"><img src="<?php echo optimizer_placeholder_image();?>" alt="<?php the_title_attribute(); ?>" class="thn_thumbnail"/></a></div>   
                                    
@@ -108,7 +108,99 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
             </div><!--lay1_wrap class END-->
 	<?php } ?>
     
+
+
+ 	<!-- - - - - - - - - - - - - - - - - - - - LAYOUT 2 - - - - - - - - - - - - - - - - - - - -->
+	<?php if($optimizer_posts_layout == '2') { ?>
+      
+		<div class="lay2_wrap">
+            	<div class="lay2_wrap_ajax">
+            
+				<?php if($widget_query->have_posts()): ?><?php while($widget_query->have_posts()): ?><?php $widget_query->the_post(); ?>
+                <div <?php post_class(); ?> id="post-<?php the_ID(); ?>"> 
+            
+ 
+            <!--POST THUMBNAIL START-->
+                <div class="post_image">
+                
+                      		<!--Woocommerce Stuff-->
+                          	<?php if ( class_exists( 'WooCommerce' ) ) { ?>
+                            	<?php if($optimizer_posts_type == 'product') { ?>
+                                	<?php do_action( 'optimizer_inside_front_post_thumb' ); ?>
+                                <?php } ?>
+                      		<?php } ?> 
+                            <!--Woocommerce Stuff END-->
+                            
+                     <!--CALL TO POST IMAGE-->
+                    <?php if ( has_post_thumbnail() ) : ?>
+                    
+                    <div class="imgwrap">  
+                    <div class="img_hover">
+                        <div class="icon_wrap animated fadeInUp">
+                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>                    
+                    <a href="<?php the_permalink();?>"><?php the_post_thumbnail('medium'); ?></a></div>
+                    
+                    <?php elseif(!optimizer_gallery_thumb() == ''): ?>
+                    <div class="imgwrap"> 
+                    <div class="img_hover">
+                        <div class="icon_wrap animated fadeInUp">
+                                	<a class="imgzoom" href="<<?php echo optimizer_gallery_thumb('optimizer_thumb'); ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+
+                        </div>
+                    </div>                     
+                    <a href="<?php the_permalink();?>"><img alt="<?php the_title(); ?>" src="<?php echo optimizer_gallery_thumb('optimizer_thumb'); ?>" /></a></div>
+                    
+                    <?php elseif(!optimizer_first_image() == ''): ?>
+                    <div class="imgwrap"> 
+                    <div class="img_hover">
+                        <div class="icon_wrap animated fadeInUp">
+                                	<a class="imgzoom" href="<?php $image = wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full'); echo $image[0]; ?>" title="<?php esc_attr_e('Preview','optimizer'); ?>" data-title="<?php the_title(); ?>"><i class="fa fa-search"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>                     
+                    <a href="<?php the_permalink();?>"><img alt="<?php the_title(); ?>" src="<?php echo optimizer_first_image('optimizer_thumb'); ?>" /></a></div>
+                    <?php else : ?>
+                    
+                    <div class="imgwrap">
+                    <div class="img_hover">
+                        <div class="icon_wrap animated fadeInUp">
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+
+                        </div>
+                    </div>
+                    <a href="<?php the_permalink();?>"><img src="<?php echo optimizer_placeholder_image();?>" alt="<?php the_title_attribute(); ?>" class="thn_thumbnail" width="500" height="350" /></a></div>   
+                             
+                    <?php endif; ?>
+                    <div class="post_content">
+                    <h2 class="postitle"><a href="<?php the_permalink();?>" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+                     <?php optimizer_excerpt('optimizer_excerptlength_teaser', 'optimizer_excerptmore'); ?> 
+                     <?php do_action( 'optimizer_after_post_content' ); ?>
+                          <!--Woocommerce Stuff-->
+                          	<?php if ( class_exists( 'WooCommerce' ) ) { ?>
+                            	<?php if($optimizer_posts_type == 'product') { ?>
+                                	<?php do_action( 'optimizer_after_front_post' ); ?>
+                                <?php } ?>
+                      		<?php } ?>
+                            <!--Woocommerce Stuff END-->
+                            
+                    </div>
+                </div>
+           <!--POST THUMBNAIL END-->     
+
+                
+            </div>
+            <?php endwhile ?> 
+				<?php wp_reset_postdata(); ?>
+            <?php endif ?>
+            </div><!--lay2_wrap_ajax END-->
+		</div><!--lay2_wrap class end-->
+	<?php } ?>
     
+        
     
 
 	<!-----------------------------------LAYOUT 4-------------------------------------------->
@@ -203,7 +295,7 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
                              </div>
                          </div>
                     <?php endif; ?>
-				<?php //} ?>
+
             	<!--SIDEBAR END--> 
 	<?php } ?>   
 
@@ -211,7 +303,7 @@ function optimizer_posts($optimizer_posts_layout='1', $optimizer_posts_type='pos
 <?php if(isset($_REQUEST['nextpage'])){		exit();		} ?>
 
 
-		<?php if($optimizer_posts_layout == '1') { optimizer_pagination($navigation, $widget_query); } ?>
+      <?php if($optimizer_posts_layout == '1' || $optimizer_posts_layout == '2' || $optimizer_posts_layout == '3') { optimizer_pagination($navigation, $widget_query); } ?>
 		<?php 			
 			if(is_category() || is_tag() || is_search() || is_author() || is_archive() ){}else{		
 			//REGISTER and ENQUEUE AJAX PAGINATION SCRIPT

@@ -78,19 +78,6 @@ $wp_customize->add_setting( 'optimizer[footer_title_color]', array(
 
 
 
-//Social Share Settings
-$wp_customize->add_setting( 'optimizer[footerbg_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'footerbg_setting', array(
-					'type' => 'info',
-					'label' => __('Footer Background Image can be set up in PRO version Only.','optimizer'),
-					'section' => 'footercolors_section',
-					'settings'    => 'optimizer[footerbg_setting]',
-			)) );
 
 //----------------------------COPYRIGHT SECTION------------------------------
 
@@ -98,7 +85,7 @@ $wp_customize->add_setting( 'optimizer[footerbg_setting]', array(
 //Footer Copyright Text
 $wp_customize->add_setting('optimizer[footer_text_id]', array(
 	'type' => 'option',
-	'default' => __('Optimizer WordPress Theme','optimizer'),
+	'default' => __('<a rel="nofollow" href="https://optimizerwp.com" target="_blank">Optimizer WordPress Theme</a>','optimizer'),
 	'sanitize_callback' => 'wp_kses_post',
 	'transport' => 'postMessage',
 ) );
@@ -107,6 +94,20 @@ $wp_customize->add_setting('optimizer[footer_text_id]', array(
 				'label' => __('Footer Copyright Text','optimizer'),
 				'section' => 'copyright_section',
 				'settings' => 'optimizer[footer_text_id]',
+			)) );
+
+
+//Footer Menu
+$wp_customize->add_setting('optimizer[footmenu_id]', array(
+	'type' => 'option',
+	'default' => '',
+	'sanitize_callback' => 'optimizer_sanitize_checkbox',
+	'transport' => 'postMessage',
+) );
+			$wp_customize->add_control( new Optimizer_Controls_Toggle_Control( $wp_customize, 'footmenu_id', array(
+				'label' => __('Display Menu in Copyright Area','optimizer'),
+				'section' => 'copyright_section',
+				'settings' => 'optimizer[footmenu_id]',
 			)) );
 
 
@@ -139,17 +140,3 @@ $wp_customize->add_setting( 'optimizer[copyright_txt_color]', array(
 				'section' => 'copyright_section',
 				'settings' => 'optimizer[copyright_txt_color]',
 			) ) );
-			
-//Copyright Area Background Image
-$wp_customize->add_setting( 'optimizer[copybg_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'copybg_setting', array(
-					'type' => 'info',
-					'label' => __('Copyright Area Background Image can be set up in PRO version Only.','optimizer'),
-					'section' => 'copyright_section',
-					'settings'    => 'optimizer[copybg_setting]',
-			)) );

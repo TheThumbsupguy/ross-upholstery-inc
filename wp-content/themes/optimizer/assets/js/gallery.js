@@ -41,7 +41,7 @@ jQuery(".gallery").each(function (){
 		var tn_array_src = jQuery(this).find(".gallery-item img").map(function() {
 		  return jQuery(this).attr("src");
 		});
-		var pageLimit= jQuery(this).find(".gall_dash img").size() - 1;
+		var pageLimit= jQuery(this).find(".gall_dash img").length - 1;
 		for (var i = 0; i <= pageLimit; i++) {
 			var article = jQuery(this).find(".gallery-item a");
 				jQuery(article[i]).addClass("" + i + "");

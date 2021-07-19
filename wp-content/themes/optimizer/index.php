@@ -24,13 +24,10 @@ global $optimizer;
   
 	</div>
 </div><!--layer_wrapper class END-->
-<?php if ( home_url() == 'https://wp-themes.com/' ||  home_url() == 'https://wp-themes.com' ) { ?>
-	<?php get_template_part('template_parts/theme','demo'); ?>
-<?php } ?>
 
 
     		<?php if ( !is_active_sidebar( 'front_sidebar' ) ) : ?>
-                <div class="fixed_site layer_wrapper <?php if ( home_url() == 'https://wp-themes.com/' ||  home_url() == 'https://wp-themes.com' ) { echo 'wpdemosite';} ?>">
+                <div class="fixed_site layer_wrapper">
                         <div class="fixed_wrap fixindex dummypost">
                         
 								<?php if(is_customize_preview()){ ?>

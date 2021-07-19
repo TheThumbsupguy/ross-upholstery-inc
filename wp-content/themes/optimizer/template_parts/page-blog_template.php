@@ -107,7 +107,7 @@ Template Name: Blog Page Template
                                 'format' => '?paged=%#%',
                                 'current' => max( 1, get_query_var('paged') ),
                                 'total' => $the_query->max_num_pages,
-                                'show_all'     => true,
+                                'show_all'     => false,
                                 'prev_next'    => false
                             
                             ) );

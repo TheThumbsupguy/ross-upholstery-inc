@@ -28,11 +28,9 @@ function optimizer_first_image() {
 		return;
 	}
 	global $wp_query;
-/*	if( $wp_query->post_count <1){
-		return;
-	}*/
 		global $post, $posts;
-		$image_url = '';
+      $image_url = '';
+      if(!$post){ return $image_url; }
 		ob_start();
 		ob_end_clean();
 		if(preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches)){;
@@ -41,41 +39,22 @@ function optimizer_first_image() {
 	return $image_url;
 }
 
-//optimizer Site title
-if ( ! function_exists( '_wp_render_title_tag' ) ) {
-	function optimizer_wp_title( $title, $sep ) {
-		global $paged, $page;
-	
-		if ( is_feed() )
-			return $title;
-	
-		// Add the site name.
-		$title .= get_bloginfo( 'name' );
-		$sep ='|';
-		// Add the site description for the home/front page.
-		$site_description = get_bloginfo( 'description', 'display' );
-		if ( $site_description && ( is_home() || is_front_page() ) )
-			$title = "$title $sep $site_description";
-	
-		// Add a page number if necessary.
-		if ( $paged >= 2 || $page >= 2 )
-			$title = "$title $sep " . sprintf( __( 'Page %s', 'optimizer' ), max( $paged, $page ) );
-	
-		return $title;
-	}
-	add_filter( 'wp_title', 'optimizer_wp_title', 10, 2 );
-}
-
 
 //Custom Excerpt Length
-function optimizer_excerptlength_teaser($length) {
-    return 20;
+if(!function_exists( 'optimizer_excerptlength_teaser' ) ){
+	function optimizer_excerptlength_teaser($length) {
+		return 20;
+	}
 }
-function optimizer_excerptlength_index($length) {
-    return 12;
+if(!function_exists( 'optimizer_excerptlength_index' ) ){
+	function optimizer_excerptlength_index($length) {
+		return 12;
+	}
 }
-function optimizer_excerptmore($more) {
-    return '...';
+if(!function_exists( 'optimizer_excerptmore' ) ){
+	function optimizer_excerptmore($more) {
+		return '...';
+	}
 }
 
 function optimizer_excerpt($length_callback='', $more_callback='') {
@@ -100,7 +79,7 @@ return array(
     'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
     'caption' => $attachment->post_excerpt,
     'description' => $attachment->post_content,
-    'href' => get_permalink( $attachment->ID ),
+    'href' => esc_url(get_permalink( $attachment->ID )),
     'src' => $attachment->guid,
     'title' => $attachment->post_title
 );
@@ -122,7 +101,7 @@ function optimizer_hex2rgb($hex) {
    }
    $rgb = array($r, $g, $b);
    return implode(",", $rgb); // returns the rgb values separated by commas
-   //return $rgb; // returns an array with the rgb values
+
 }
 
 /*Optimizer Color Sanitization*/
@@ -193,7 +172,7 @@ add_filter('wp_kses_allowed_html','optimizer_allow_html', 1);
 function optimizer_attachment_id_by_url( $url ) {
 	$parsed_url  = explode( parse_url( WP_CONTENT_URL, PHP_URL_PATH ), $url );
 
-	$this_host = str_ireplace( 'www.', '', parse_url( home_url(), PHP_URL_HOST ) );
+	$this_host = str_ireplace( 'www.', '', parse_url( esc_url(home_url()), PHP_URL_HOST ) );
 	$file_host = str_ireplace( 'www.', '', parse_url( $url, PHP_URL_HOST ) );
 
 	if ( ! isset( $parsed_url[1] ) || empty( $parsed_url[1] ) || ( $this_host != $file_host ) ) {

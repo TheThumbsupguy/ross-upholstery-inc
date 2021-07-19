@@ -27,7 +27,7 @@ global $optimizer;?>
                           <?php elseif(!optimizer_gallery_thumb() == ''): ?>
                           <div class="imgwrap">
 							<div class="icon_wrap animated fadeInUp">
-                              		<a href="<?php the_permalink();?>" title="<?php echo _e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                              		<a href="<?php the_permalink();?>" title="<?php esc_attr_e('Read More','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                             </div>
                           <a href="<?php the_permalink();?>"><img src="<?php echo optimizer_gallery_thumb();?>" alt="<?php the_title_attribute(); ?>" class="thn_thumbnail"/></a></div>
 

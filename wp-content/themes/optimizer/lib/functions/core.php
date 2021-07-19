@@ -9,32 +9,6 @@
  * @since Optimizer 1.0
  */
  
-//Front page query
-
-function optimizer_home_query($query) {
-	global $optimizer;
-	global $optimizerdb; 
-	if(!empty($optimizerdb) && empty($optimizer['converted'])) {
-			if( $query->is_main_query() && is_front_page() ) {
-				
-				$postype = $optimizer['n_posts_type_id'];
-				set_query_var( 'post_type', ''.$postype.'');
-				set_query_var( 'paged', ( get_query_var('paged') ? get_query_var('paged') : 1) );
-				$postcount = $optimizer['n_posts_field_id'];
-						set_query_var( 'posts_per_page', ''.$postcount.'' );
-				
-				if(!empty($optimizer['posts_cat_id'])){
-					$postcat = $optimizer['posts_cat_id'];
-					set_query_var( 'cat', ''.implode(',', $postcat).'' );
-				}
-		
-			}
-		}
-}
-
-add_action( 'pre_get_posts', 'optimizer_home_query' );
-
-
 //ADD BODY CLASSES
 function optimizer_body_class( $classes ) {
 	global $optimizer;
@@ -54,8 +28,12 @@ function optimizer_body_class( $classes ) {
 	}
 	if ( is_customize_preview() ) {
 		$classes[] = 'customizer-prev';
-	}
+   }
 
+   if(!empty($optimizer['disable_slider_parallax'])){
+		$classes[] = 'disable_slider_parallax';
+	}
+   
 	return $classes;
 }
 add_filter( 'body_class', 'optimizer_body_class' );
@@ -88,7 +66,7 @@ function optimizer_widgets_init(){
 	register_sidebar(array(
 	'name'          => __('Frontpage Widgets', 'optimizer'),
 	'id'            => 'front_sidebar',
-	'description'   => __('With Optmizer Free you can only add 4 widgets to this Area. Upgrade to PRO to add unlimited Widgets.', 'optimizer'),
+	'description'   => __('With Optmizer Free you can only add 6 widgets to this Area. Upgrade to PRO to add unlimited Widgets.', 'optimizer'),
 	'before_widget' => '<div id="%1$s" class="widget %2$s" data-widget-id="%1$s"><div class="widget_wrap">'.$editbutton,
 	'after_widget'  => '</div></div>',
 	'before_title'  => '<h3 class="widgettitle">',
@@ -101,10 +79,11 @@ add_action( 'widgets_init', 'optimizer_widgets_init' );
 
 
 //Default Placeholder Image
-function optimizer_placeholder_image(){
-	return ''. get_template_directory_uri().'/assets/images/blank_img.png';
+if(!function_exists( 'optimizer_placeholder_image' ) ){
+	function optimizer_placeholder_image(){
+		return ''. get_template_directory_uri().'/assets/images/blank_img.png';
+	}
 }
-
 //Assign Thumbnail to post if it has gallery
 function optimizer_gallery_thumb(){
  	global $post;
@@ -135,7 +114,7 @@ function optimizer_overwrite_gallery_atts($out, $pairs, $atts){
 
 //Display Read More Button in Layout4
 function optimizer_excerpt_more($more) {
-	return '<br><a class="moretag" href="'. get_permalink() . '">'.__('+ Read More', 'optimizer').'</a>';
+	return '<br><a class="moretag" href="'. esc_url(get_permalink()) . '">'.__('+ Read More', 'optimizer').'</a>';
 }
 add_filter('excerpt_more', 'optimizer_excerpt_more');
 
@@ -149,10 +128,10 @@ function optimizer_more_link( $more_link, $more_link_text ) {
 
 //optimizer CUSTOM Search Form
 function optimizer_search_form( $form ) {
-    $form = '<form role="search" method="get" id="searchform" action="' . home_url( '/' ) . '" >
+    $form = '<form role="search" method="get" id="searchform" action="' . esc_url(home_url( '/' )) . '" >
     <div>
-    <input placeholder="' . __( 'Search &hellip;', 'optimizer' ) . '" type="text" value="' . get_search_query() . '" name="s" id="s" />
-    <input type="submit" id="searchsubmit" value="'. __( 'Search', 'optimizer' ) .'" />
+    <input placeholder="' . esc_attr__( 'Search &hellip;', 'optimizer' ) . '" type="text" value="' . get_search_query() . '" name="s" id="s" />
+    <input type="submit" id="searchsubmit" value="'. esc_attr__( 'Search', 'optimizer' ) .'" />
     </div>
     </form>';
 
@@ -163,6 +142,7 @@ add_filter( 'get_search_form', 'optimizer_search_form' );
 
 
 //**************Toptimizer COMMENTS******************//
+if(!function_exists( 'optimizer_comment' ) ){
 function optimizer_comment($comment, $args, $depth) {
    $GLOBALS['comment'] = $comment; ?>
    <li <?php comment_class(); ?> id="li-comment-<?php comment_ID() ?>">
@@ -173,8 +153,8 @@ function optimizer_comment($comment, $args, $depth) {
       
       <div class="comment-author vcard">
             <div class="avatar"><?php echo get_avatar($comment,$size='30' ); ?></div>
-            <div class="comm_auth"><?php printf(__('%s', 'optimizer'), get_comment_author_link()) ?></div>
-            <a class="comm_date"><i class="fa-clock-o"></i><?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . ' ago'; ?></a>
+            <div class="comm_auth"><?php printf('%s', get_comment_author_link()) ?></div>
+            <a class="comm_date"><i class="fa-clock-o"></i><?php echo human_time_diff( get_comment_time('U'), current_time('timestamp') ) . __(' ago', 'optimizer'); ?></a>
             
             <div class="comm_reply">
               <?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth'], 'before' =>'<i class="fa-reply"></i> '))) ?>
@@ -193,6 +173,7 @@ function optimizer_comment($comment, $args, $depth) {
      </div>
 <?php
         }
+}
 		
 //**************TRACKBACKS & PINGS******************//
 function optimizer_ping($comment, $args, $depth) {

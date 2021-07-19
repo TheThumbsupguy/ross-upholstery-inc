@@ -15,7 +15,7 @@ $optimizerdb = get_option( 'optimizer' );
 
 //**************optimizer SETUP******************//
 function optimizer_setup() {
-	//add_theme_support( 'custom-header' );
+
 	add_theme_support( 'title-tag' );			//WP 4.1 Site Title
 	add_theme_support( 'woocommerce' );			//Woocommerce Support
 	add_theme_support('automatic-feed-links');	//RSS FEED LINK
@@ -25,15 +25,22 @@ function optimizer_setup() {
 	//Make theme available for translation
 	load_theme_textdomain('optimizer', get_template_directory() . '/languages/');  
 	
-	//Custom Thumbnail Size	
-		add_image_size( 'optimizer_thumb', 400, 270, true ); /*(cropped)*/
+	//Wordpress 4.7 Customizer Partial Refresh
+	add_theme_support( 'customize-selective-refresh-widgets' );
+	
+	//Custom Thumbnail Size	(cropped)
+		add_image_size( 'optimizer_thumb', 400, 270, true );
    
 	//Register Menus
 	register_nav_menus( array(
 			'primary' => __( 'Header Navigation', 'optimizer' ),
+			'footer' => __( 'Footer Navigation', 'optimizer' ),
 		) );
+	
 	}
 add_action( 'after_setup_theme', 'optimizer_setup' );
+
+
 
 //**************optimizer FUNCTIONS******************//
 require(get_template_directory() . '/framework/core-functions.php');			//Include Optimizer Framework Core Functions 
@@ -43,10 +50,10 @@ require(get_template_directory() . '/lib/functions/admin.php');				//Include Adm
 require(get_template_directory() . '/lib/functions/woocommerce.php');			//Include Woocommerce Functions
 require(get_template_directory() . '/lib/functions/defaults.php');
 require(get_template_directory() . '/customizer/customizer.php');
-require(get_template_directory() . '/lib/functions/converter.php');
 require(get_template_directory() . '/lib/includes/google_fonts.php');
 
 //WIDGETS
 require(get_template_directory() . '/frontpage/widgets/init.php');
 require(get_template_directory() . '/framework/core-posts.php');		
 require(get_template_directory() . '/framework/core-pagination.php');
+require(get_template_directory() . '/lib/functions/siteorigin.php');

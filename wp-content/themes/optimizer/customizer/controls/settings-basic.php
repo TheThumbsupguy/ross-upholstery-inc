@@ -11,7 +11,6 @@ $wp_customize->add_setting('optimizer[converted]', array(
 	'type' => 'option',
 	'default' => '',
 	'sanitize_callback' => 'optimizer_sanitize_checkbox',
-	//'transport' => 'postMessage',
 ) );
 
 			$wp_customize->add_control( 'converted', array(
@@ -49,7 +48,6 @@ $wp_customize->add_setting( 'optimizer[center_width]', array(
 		'type' => 'option',
         'default' => '85',
 		'sanitize_callback' => 'optimizer_sanitize_number',
-		//'transport' => 'postMessage',
 ) );
  
 			$wp_customize->add_control('center_width', array(

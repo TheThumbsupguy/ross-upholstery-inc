@@ -74,7 +74,7 @@ $wp_customize->add_setting('optimizer[facebook_field_id]', array(
 ) );
 			$wp_customize->add_control('facebook_field_id', array(
 				'type' => 'text',
-				'label' => __('Facebook URL','optimizer'),
+				'label' => __('LINK 1','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[facebook_field_id]',
 			) );
@@ -89,7 +89,7 @@ $wp_customize->add_setting('optimizer[twitter_field_id]', array(
 ) );
 			$wp_customize->add_control('twitter_field_id', array(
 				'type' => 'text',
-				'label' => __('Twitter URL','optimizer'),
+				'label' => __('LINK 2','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[twitter_field_id]',
 			) );
@@ -103,7 +103,7 @@ $wp_customize->add_setting('optimizer[gplus_field_id]', array(
 ) );
 			$wp_customize->add_control('gplus_field_id', array(
 				'type' => 'text',
-				'label' => __('Google Plus URL','optimizer'),
+				'label' => __('LINK 3','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[gplus_field_id]',
 			) );
@@ -117,7 +117,7 @@ $wp_customize->add_setting('optimizer[youtube_field_id]', array(
 ) );
 			$wp_customize->add_control('youtube_field_id', array(
 				'type' => 'text',
-				'label' => __('Youtube URL','optimizer'),
+				'label' => __('LINK 4','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[youtube_field_id]',
 			) );
@@ -132,7 +132,7 @@ $wp_customize->add_setting('optimizer[flickr_field_id]', array(
 ) );
 			$wp_customize->add_control('flickr_field_id', array(
 				'type' => 'text',
-				'label' => __('Flickr URL','optimizer'),
+				'label' => __('LINK 5','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[flickr_field_id]',
 			) );
@@ -147,7 +147,7 @@ $wp_customize->add_setting('optimizer[linkedin_field_id]', array(
 ) );
 			$wp_customize->add_control('linkedin_field_id', array(
 				'type' => 'text',
-				'label' => __('Linkedin URL','optimizer'),
+				'label' => __('LINK 6','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[linkedin_field_id]',
 			) );
@@ -161,7 +161,7 @@ $wp_customize->add_setting('optimizer[pinterest_field_id]', array(
 ) );
 			$wp_customize->add_control('pinterest_field_id', array(
 				'type' => 'text',
-				'label' => __('Pinterest URL','optimizer'),
+				'label' => __('LINK 7','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[pinterest_field_id]',
 			) );
@@ -176,7 +176,7 @@ $wp_customize->add_setting('optimizer[tumblr_field_id]', array(
 ) );
 			$wp_customize->add_control('tumblr_field_id', array(
 				'type' => 'text',
-				'label' => __('Tumblr URL','optimizer'),
+				'label' => __('LINK 8','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[tumblr_field_id]',
 			) );
@@ -190,7 +190,7 @@ $wp_customize->add_setting('optimizer[instagram_field_id]', array(
 ) );
 			$wp_customize->add_control('instagram_field_id', array(
 				'type' => 'text',
-				'label' => __('Instagram URL','optimizer'),
+				'label' => __('LINK 9','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[instagram_field_id]',
 			) );
@@ -204,7 +204,7 @@ $wp_customize->add_setting('optimizer[dribble_field_id]', array(
 ) );
 			$wp_customize->add_control('dribble_field_id', array(
 				'type' => 'text',
-				'label' => __('Dribbble URL','optimizer'),
+				'label' => __('LINK 10','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[dribble_field_id]',
 			) );
@@ -219,7 +219,7 @@ $wp_customize->add_setting('optimizer[behance_field_id]', array(
 ) );
 			$wp_customize->add_control('behance_field_id', array(
 				'type' => 'text',
-				'label' => __('Behance URL','optimizer'),
+				'label' => __('LINK 11','optimizer'),
 				'section' => 'socialinks_section',
 				'settings' => 'optimizer[behance_field_id]',
 			) );
@@ -315,20 +315,4 @@ $wp_customize->add_setting('optimizer[post_gallery_id]', array(
 				'section' => 'miscother_section',
 				'settings' => 'optimizer[post_gallery_id]',
 				'description' => __( 'Replaces your boring WordPress galleries with Optimizer slideshow gallery system.', 'optimizer' ),
-			)) );
-
-
-
-//Static Slider Gallery
-$wp_customize->add_setting( 'optimizer[seo_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'seo_setting', array(
-					'type' => 'info',
-					'label' => __('SEO Settings are available in the PRO version.','optimizer'),
-					'section' => 'miscseo_section',
-					'settings'    => 'optimizer[seo_setting]',
 			)) );

@@ -25,6 +25,7 @@ $optimizer = optimizer_option_defaults();
 </head>
 
 <body <?php body_class();?>>
+<?php wp_body_open(); ?>
 <!--HEADER-->
 <div class="header_wrap layer_wrapper">
 	<?php get_template_part('template_parts/head','type1'); ?>

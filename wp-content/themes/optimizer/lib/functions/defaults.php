@@ -9,8 +9,8 @@ function optimizer_option_defaults() {
 		'head_transparent' => '1',
 		'trans_header_color' => '#fff',
 		'totop_id' => '1',
-		'footer_text_id' => __('Optimizer WordPress Theme', 'optimizer'),
-		'footmenu_id' => '1',
+		'footer_text_id' => __('<a href="https://optimizerwp.com" rel="nofollow" target="_blank">Optimizer WordPress Theme</a>', 'optimizer'),
+		'footmenu_id' => '',
 		'copyright_center' => '',
 		
 		'slider_type_id' => 'static',
@@ -83,6 +83,7 @@ function optimizer_option_defaults() {
 		'social_single_id' => '1',
 		'social_page_id' => '',
 		
+		'hide_tagline' => '1',
 		'post_lightbox_id' => '1',
 		'post_gallery_id' => '1',
 		'cat_layout_id' => '1',
