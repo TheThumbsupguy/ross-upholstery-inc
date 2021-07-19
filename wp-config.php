@@ -6,6 +6,8 @@ define('DISALLOW_FILE_EDIT', true);
 define('WP_CACHE', true); // Added by W3 Total Cache
 
 
+
+
 /**
  * The base configurations of the WordPress.
  *
