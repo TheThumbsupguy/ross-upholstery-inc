@@ -10,7 +10,7 @@
  */
 global $optimizer;?>
 
-<div class="social_bookmarks<?php if(!empty($optimizer['social_show_color'])) { ?> social_color<?php } ?> bookmark_<?php echo $optimizer['social_button_style'];?> bookmark_size_<?php echo $optimizer['social_bookmark_size']; ?>">
+<div class="social_bookmarks<?php if(!empty($optimizer['social_show_color'])) { ?> social_color<?php } ?> bookmark_<?php echo esc_attr($optimizer['social_button_style']);?> bookmark_size_<?php echo esc_attr($optimizer['social_bookmark_size']); ?>">
 	  <?php if(!empty($optimizer['facebook_field_id']) || is_customize_preview()){ ?>
       	<a target="_blank" class="ast_fb" href="<?php echo esc_url($optimizer['facebook_field_id']); ?>"><i class="fa-facebook"></i></a>
       <?php } ?>

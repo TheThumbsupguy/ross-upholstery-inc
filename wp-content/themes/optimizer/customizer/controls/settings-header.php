@@ -83,11 +83,23 @@ $wp_customize->add_setting( 'optimizer[logo_image_id][url]',array(
 					'label'       => __( 'Logo Image *', 'optimizer' ),
 					'section'     => 'headlogo_section',
 					'settings'    => 'optimizer[logo_image_id][url]',
-					//'description' => __('This image will replace the text logo.','optimizer'),
 						)
 					)
 			);
 
+
+//Hide Site Description
+$wp_customize->add_setting('optimizer[hide_tagline]', array(
+	'type' => 'option',
+	'default' => '',
+	'sanitize_callback' => 'optimizer_sanitize_checkbox',
+	'transport' => 'postMessage',
+) );
+			$wp_customize->add_control( new Optimizer_Controls_Toggle_Control( $wp_customize, 'hide_tagline', array(
+				'label' => __('Hide Site Tagline','optimizer'),
+				'section' => 'headlogo_section',
+				'settings' => 'optimizer[hide_tagline]',
+			)) );
 
 
 //============================HEADER - MENU SECTION=================================

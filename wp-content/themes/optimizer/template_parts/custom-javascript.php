@@ -12,7 +12,7 @@ global $optimizer;?>
 
 <?php if( 'static' == $optimizer['slider_type_id'] && empty($optimizer['head_transparent'])){ ?>
 <script type="text/javascript">
-	jQuery(window).load(function() {
+	jQuery(window).on('load',function() {
 		//STATIC SLIDER IMAGE FIXED
 		var statimgheight = jQuery(".stat_has_img img").height();
 		<?php if ( is_admin_bar_showing() ) { ?>var hheight = jQuery(".header").height() + 32;<?php }else{ ?>var hheight = jQuery(".header").height();<?php } ?>

@@ -82,19 +82,6 @@ $wp_customize->add_setting( 'optimizer[page_header_txtcolor]', array(
 			) ) );
 
 
-//Social Share Settings
-$wp_customize->add_setting( 'optimizer[page_headerbg_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'page_headerbg_setting', array(
-					'type' => 'info',
-					'label' => __('Page Header Background Image (per page) can be changed in PRO version.','optimizer'),
-					'section' => 'pageheader_section',
-					'settings'    => 'optimizer[page_headerbg_setting]',
-			)) );
 
 //----------------------BLOG PAGE SECTION----------------------------------
 
@@ -295,33 +282,3 @@ $wp_customize->add_setting('optimizer[cat_layout_id]', array(
 						'4' => array( 'url' => get_template_directory_uri().'/assets/images/layout4.png', 'label' => 'Layout 4' ),
 					),
 			) ));
-			
-			
-//Social Share Settings
-$wp_customize->add_setting( 'optimizer[share_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'share_setting', array(
-					'type' => 'info',
-					'label' => __('Social Share Settings are available in the PRO version.','optimizer'),
-					'section' => 'socialshare_section',
-					'settings'    => 'optimizer[share_setting]',
-			)) );
-			
-
-//Social Share Settings
-$wp_customize->add_setting( 'optimizer[contactpage_setting]', array(
-		'type' => 'option',
-        'default' => '',
-		'sanitize_callback'    => 'sanitize_key',
-) );
- 
-			$wp_customize->add_control( new Optimizer_Controls_Info_Control( $wp_customize, 'contactpage_setting', array(
-					'type' => 'info',
-					'label' => __('Contact Page can be set up in PRO version Only.','optimizer'),
-					'section' => 'contactpage_section',
-					'settings'    => 'optimizer[contactpage_setting]',
-			)) );

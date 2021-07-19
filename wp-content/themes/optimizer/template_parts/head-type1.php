@@ -16,7 +16,8 @@ global $optimizer;?>
         <div class="center">
             <div class="head_inner">
             <!--LOGO START-->
-                <div class="logo">
+            	<?php if(!empty($optimizer['hide_tagline'])){ $hidedesc='hide_sitetagline'; }else{ $hidedesc=''; } ?>
+                <div class="logo <?php echo $hidedesc; ?>">
                     <?php if(!empty($optimizer['logo_image_id']['url'])){   ?>
                         <a class="logoimga" title="<?php bloginfo('name') ;?>" href="<?php echo esc_url( home_url( '/' ) ); ?>"><img src="<?php $logo = $optimizer['logo_image_id']; echo $logo['url']; ?>" /></a>
                         <span class="desc"><?php echo bloginfo('description'); ?></span>

@@ -32,7 +32,7 @@
                                 	<!--DATE-->
                                     <i class="fa-calendar"></i><a class="comm_date post-date updated"><?php the_time( get_option('date_format') ); ?></a>
                                     <!--AUTHOR-->
-                                    <i class="fa-user"></i><?php global $authordata; $post_author = "<a class='vcard author post-author' href=\"".get_author_posts_url( $authordata->ID, $authordata->user_nicename )."\"><span class='fn'>".get_the_author()."</span></a>\r\n"; echo $post_author; ?>
+                                    <i class="fa-user"></i><?php global $authordata; $post_author = "<a class='vcard author post-author' href=\"".get_author_posts_url( $authordata->ID, $authordata->user_nicename )."\"><span class='fn author'>".get_the_author()."</span></a>\r\n"; echo $post_author; ?>
                                     <!--COMMENTS COUNT-->
                                     <i class="fa-comments-o"></i><?php if (!empty($post->post_password)) { ?>
                                 <?php } else { ?><div class="meta_comm"><?php comments_popup_link( __('0 Comment', 'optimizer'), __('1 Comment', 'optimizer'), __('% Comments', 'optimizer'), '', __('Off' , 'optimizer')); ?></div><?php } ?>

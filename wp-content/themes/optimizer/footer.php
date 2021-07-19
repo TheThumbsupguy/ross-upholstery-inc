@@ -24,7 +24,7 @@ global $optimizer;?>
         <!--Footer Widgets START-->
         <div class="widgets">
         	<ul>
-				<?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar(__('Footer Widgets', 'optimizer')) ) : ?><?php endif; ?>
+				<?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar( 'foot_sidebar' ) ) : ?><?php endif; ?>
         	</ul>
         </div>
         <!--Footer Widgets END-->
@@ -37,14 +37,18 @@ global $optimizer;?>
                 
                     <!--Site Copyright Text START-->
                     	<div class="copytext"><?php if (!empty ($optimizer['footer_text_id'])) { ?><?php $foot = html_entity_decode($optimizer['footer_text_id']); $foot = stripslashes($foot); echo do_shortcode($foot); ?><?php } ?></div>
-        					<!--<div class="copytext"><?php //printf( __( 'Theme by %s', 'optimizer' ), '<a target="_blank" href="http://optimizerwp.com/">Layerthemes</a>' ); ?></div>-->
-
                     <!--Site Copyright Text END-->
                
-               <div class="foot_right_wrap">  
+               <div class="foot_right_wrap"> 
+						<!--FOOTER MENU START-->   
+                        <?php if (!empty ($optimizer['footmenu_id']) || is_customize_preview()) { ?>
+                        <div id="footer_menu" class="<?php if (empty ($optimizer['footmenu_id'])) echo 'hide_footmenu'; ?>"><?php wp_nav_menu( array( 'container_class' => 'menu-footer', 'theme_location' => 'footer', 'depth' => '1') ); ?></div>
+                        <?php } ?>
+                        <!--FOOTER MENU END-->
+                
                     <!--SOCIAL ICONS START-->
                       <div class="foot_soc"><?php if ($optimizer['social_bookmark_pos'] == 'footer') { ?><?php get_template_part('framework/core','social'); ?><?php } ?></div>
-                        <!--SOCIAL ICONS END-->
+                    <!--SOCIAL ICONS END-->
                 </div>
                 
                 </div><!--Center END-->

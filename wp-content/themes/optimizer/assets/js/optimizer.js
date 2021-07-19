@@ -27,15 +27,15 @@ jQuery(window).ready(function() {
 	if (jQuery(window).width() > 768) {
 		
 		jQuery('#topmenu ul > li').not('#topmenu ul > li.mega-menu-item').hoverIntent(function(){
-			jQuery(this).find('.sub-menu, ul.children').not('.sub-menu .sub-menu, ul.children ul.children').removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
+			jQuery(this).find('.sub-menu, ul.children').eq(0).removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
 		}, function(){
-			jQuery(this).find('.sub-menu, ul.children').not('.sub-menu .sub-menu, ul.children ul.children').addClass('animated fadeOut').delay(300).queue(function(next){ jQuery(this).removeClass("animated fadeInUp menushow");next();});
-	});
+			jQuery(this).find('.sub-menu, ul.children').eq(0).addClass('animated fadeOut').delay(300).queue(function(next){ jQuery(this).removeClass("animated fadeInUp menushow");next();});
+		});
 	
 		jQuery('#topmenu ul li ul li').not('#topmenu ul li.mega-menu-item ul.mega-sub-menu li').hoverIntent(function(){
-			jQuery(this).find('.sub-menu, ul.children').removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
+			jQuery(this).find('.sub-menu, ul.children').eq(0).removeClass('animated fadeOut').addClass('animated fadeInUp menushow');
 		}, function(){
-			jQuery(this).find('.sub-menu, ul.children').addClass('animated fadeOut').delay(300).queue(function(next){
+			jQuery(this).find('.sub-menu, ul.children').eq(0).addClass('animated fadeOut').delay(300).queue(function(next){
 						jQuery(this).removeClass("animated fadeInUp menushow");next();});
 		});
 	
@@ -80,7 +80,7 @@ jQuery(window).ready(function() {
     });
 	
 	// TO_TOP
-	jQuery(window).bind("scroll", function() {
+	jQuery(window).on("scroll", function() {
 		if (jQuery(this).scrollTop() > 800) {
 			jQuery(".to_top").fadeIn('slow');
 		} else {
@@ -114,7 +114,7 @@ jQuery(window).ready(function() {
 	
 	jQuery('.stat_has_img').waitForImages(function() {
 		var resizeTimer;
-		jQuery(window).bind("load resize", function() {
+		jQuery(window).on("load resize", function() {
 		  clearTimeout(resizeTimer);
 		  resizeTimer = setTimeout(function() {
 			var body_size = jQuery('.stat_has_img .stat_content_inner .center').height() + 120;
@@ -125,7 +125,7 @@ jQuery(window).ready(function() {
 
 		
 		
-jQuery(window).bind("load resize", function() {
+jQuery(window).on("load resize", function() {
 	if (jQuery(window).width() <= 480) {	
 		jQuery(".stat_bg_img").css({"opacity":"0"});
 		jQuery('.stat_content_inner').waitForImages(function() { jQuery("#stat_img").height(jQuery(".stat_content_inner").height());  });
@@ -204,7 +204,12 @@ if (jQuery(window).width() > 480) {
 	  side: 'right'
     });
 	jQuery(".sidr").prepend("<div class='pad_menutitle'>"+padmenu+"<span><i class='fa-times'></i></span></div>");
-	
+		//Make Icons show up in sidr
+		jQuery('.sidr-class-menu-item i').attr('class', function(_, klass) {
+			return 'fa fa' + klass.split('-fa').pop();
+		});
+			
+		jQuery("#topmenu .head_soc").clone().appendTo(".sidr-class-head_soc");
 	jQuery(".pad_menutitle span").click(function() {
 		jQuery.sidr('close', 'sidr-main')
 		preventDefaultEvents: false;
@@ -259,7 +264,6 @@ if (jQuery(window).width() < 480) {
 	
 	//Rearragnge comment form box
 	jQuery(".comm_wrap").insertAfter(".comment-form-comment");
-	jQuery(".comm_wrap input").placeholder();
 	
 	//404 class is not being added in body
 	jQuery('body').has('.error_msg').addClass('error404');
@@ -269,12 +273,13 @@ if (jQuery(window).width() < 480) {
 
 	
 	//Make sure the footer always stays to the bottom of the page when the page is short
-	var docHeight = jQuery(window).height();
-	var footerHeight = jQuery('#footer').height();
-	var footerTop = jQuery('#footer').position().top + footerHeight;
-	   
-	if (footerTop < docHeight) {  jQuery('#footer').css('margin-top', 1 + (docHeight - footerTop) + 'px');  }
-
+	jQuery(window).on("load", function() {
+		var docHeight = jQuery(window).height();
+		var footerHeight = jQuery('#footer').height();
+		var footerTop = jQuery('#footer').position().top + footerHeight;
+		   
+		if (footerTop < docHeight) {  jQuery('#footer').css('margin-top', 1 + (docHeight - footerTop) + 'px');  }
+	});
 	
 	//Woocommerce
 	jQuery('.lay1.optimposts, .lay4.optimposts').each(function(index, element) {  jQuery(this).waitForImages(function() { jQuery(this).find('.type-product').matchHeight({property: 'min-height'});  });  });
@@ -300,6 +305,7 @@ if (jQuery(window).width() < 480) {
 				
 	});
 	
+	
 //Check If IOS & SAFARI
 function getMobileOperatingSystem() {
   var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -307,15 +313,17 @@ function getMobileOperatingSystem() {
   {	return 'iOS'; }
 }
 var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-
-//IF iOS, Hide the video slider:
-if(getMobileOperatingSystem() == 'iOS'){
-		jQuery('body').addClass('is-ios');
-}else{
-		jQuery('body').addClass('not-ios');
-}
-
-//Check If Safari
-if(isSafari == true){
-		jQuery('body').addClass('is_safari');
-}
+	
+	//IF iOS, Hide the video slider:
+	jQuery(window).ready(function() {
+		if(getMobileOperatingSystem() == 'iOS'){
+				jQuery('body').addClass('is-ios');
+		}else{
+				jQuery('body').addClass('not-ios');
+		}
+		
+		//Check If Safari
+		if(isSafari == true){
+				jQuery('body').addClass('is_safari');
+		}	
+	});

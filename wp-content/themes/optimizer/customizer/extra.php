@@ -19,6 +19,16 @@ function optimizer_customizer_editor() {
 add_action( 'widgets_admin_page', 'optimizer_customizer_editor', 100 );
 add_action( 'customize_controls_print_footer_scripts', 'optimizer_customizer_editor', 1 );
 
+//SiteOrigin Builder
+if( function_exists('siteorigin_panels_render') ) {
+	add_action( 'edit_form_after_editor', 'optimizer_customizer_editor', 100 );
+}
+//Beaver Builder
+if ( class_exists( 'FLBuilder' ) ) {
+	if(isset($_GET['fl_builder'])) {
+		add_action( 'optimizer_after_footer', 'optimizer_customizer_editor', 100 );
+	}
+}
 
 
 /* Add Filters for the Customizer wp_editor */
@@ -46,7 +56,7 @@ function optimizer_customizer_stuff() {
                 <div class="settings_toggle_inner">
                 <p><?php _e('Add Dummy Content(Widgets) to your Frontpage. After Importing you can edit them from Widgets > Frontpage Sections', 'optimizer'); ?></p>
 					<form id="import_dummy" action="" method="post" enctype="multipart/form-data">
-						<input type="submit" name="assign_widgets" id="dummy_button" class="button-primary" value="<?php _e('Import Dummy Content', 'optimizer'); ?>" />
+						<input type="submit" name="assign_widgets" id="dummy_button" class="button-primary" value="<?php esc_attr_e('Import Dummy Content', 'optimizer'); ?>" />
                      <?php wp_nonce_field('optimizer_assign_widgets', 'optimizer_assign_widgets'); ?>
                         </form>
                 </div>
@@ -59,7 +69,7 @@ function optimizer_customizer_stuff() {
             	<h4><?php _e('Reset Options', 'optimizer'); ?></h4>
                 <div class="settings_toggle_inner">
                 	<p><?php _e('Reset Options to default theme settings. All your current theme settings will be lost except the widgets settings.', 'optimizer'); ?></p>
-                    <form id="optimizer_reset" method="post" action="" onsubmit="return confirm('<?php _e('Do you really want to Reset? All your Theme Settings will be lost.', 'optimizer'); ?>')">
+                    <form id="optimizer_reset" method="post" action="" onsubmit="return confirm('<?php esc_attr_e('Do you really want to Reset? All your Theme Settings will be lost.', 'optimizer'); ?>')">
                         <?php wp_nonce_field( 'optimizer_reset_nonce', 'reset_themeoptions' ); ?>
                         <input type="submit" name="reset" value="Reset" />
                     </form>
@@ -99,18 +109,18 @@ function optimizer_customizer_stuff() {
             
         </div>
         
-		<div id="preset_options">
+	<div id="preset_options">
         <i class="fa fa-times preset_close"></i>
         <h3><?php _e('Presets', 'optimizer'); ?></h3>
         <p><?php _e('With Optimizer PRO you can easily import presets to your site with just one click.', 'optimizer'); ?></p>
         <?php 
-			$presets = array('1','2','3','4','5','6','7','8','9','10','11','12');
+			$presets = array('1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27');
 			foreach ($presets as $preset) { ?>
             
                 <form action="" method="post" enctype="multipart/form-data">
                 <div class="preset_p">
                 
-               <img src="<?php echo get_template_directory_uri(); ?>/assets/images/presets/preset<?php echo $preset;?>.jpg" title="Preset <?php echo $preset;?>" />
+               <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/presets/preset<?php echo $preset;?>.jpg" title="Preset <?php echo $preset;?>" />
                 <div class="preset_buttons_wrap">
                 	<a href="http://optimizerwp.com/presets/<?php echo $preset;?>/" target="_blank" class="preset_demo"><i class="fa-eye"></i> <?php _e('Demo','optimizer'); ?></a>
                     <a class="import_preset"><i class="fa fa-lock"></i> <?php _e('Import (PRO)', 'optimizer'); ?></a>
@@ -124,36 +134,23 @@ function optimizer_customizer_stuff() {
 		<?php } ?>
 
         </div>
+        
+		<?php do_action( 'optimizer_preset_promo' ); ?>
                     
             <!--FOOTER LINKS-->
             <div id="footlinks">
             	<a class="optim_presets" title="<?php _e('Presets', 'optimizer'); ?>"><i class="fa fa-star"></i></a>
-            	<a class="optim_dashboard" target="_blank" href="<?php echo admin_url(); ?>" title="<?php _e('Dashboard', 'optimizer'); ?>"><i class="fa fa-dashboard"></i></a>
-            	<a class="optim_docs" target="_blank" href="http://optimizerwp.com/optimizer-documentation/" title="<?php _e('Documentation', 'optimizer'); ?>"><i class="fa fa-book"></i></a>
-                <a class="optim_settings" title="<?php _e('Settings', 'optimizer'); ?>"><i class="fa fa-cog"></i></a>
-				<a class="optim_expand" title="<?php _e('Expand', 'optimizer'); ?>"><i class="fa fa-arrows-h"></i></a>
+            	<a class="optim_dashboard"href="<?php echo admin_url(); ?>" title="<?php esc_attr_e('Dashboard', 'optimizer'); ?>"><i class="fa fa-dashboard"></i></a>
+                <a class="optim_settings" title="<?php esc_attr_e('Settings', 'optimizer'); ?>"><i class="fa fa-cog"></i></a>
+				<a class="optim_expand" title="<?php esc_attr_e('Expand', 'optimizer'); ?>"><i class="fa fa-arrows-h"></i></a>
             </div>
             
-
-            
-            <!--CONVERSION PROCESS-->
-            <?php global $optimizer;global $optimizerdb;  if(!empty($optimizerdb) && empty($optimizer['converted']) ) { ?>
-            <div class="conversion_message">
-                <div class="convert_inner">
-                    <p><?php _e('Please Click the "Convert" Button to Update to the Latest version of the theme.', 'optimizer'); ?></p>
-						<form action="" method="post">
-                    		<p><input type="submit" name="convert" id="convert_button" class="button-primary" value="<?php _e('Convert', 'optimizer'); ?>" /></p>
-                    	<?php wp_nonce_field('optimizer_convert', 'optimizer_convert'); ?>
-               			</form>
-                </div>
-            </div>
-            <?php } ?>
             
             <!--Theme Onboarding Tour-->
             <ol id="optimizerTour">
             	<i class="fa fa-times tourclose"></i>
             	<li>
-                	<h3><?php _e('Welcome to Optimizer', 'optimizer'); ?> <span><?php _e('PRO version', 'optimizer'); ?></span></h3>
+                	<h3><?php _e('Welcome to Optimizer', 'optimizer'); ?> <span><?php _e('Free version', 'optimizer'); ?></span></h3>
                     <p><?php _e('Creating websites with Optimizer is super easy and fun. In next steps, you\'ll see how easy it is to customizer your site and see the changes live without jumping between windows.', 'optimizer'); ?></p>
                 	<button class="tournext"><?php _e('Start the Tour', 'optimizer'); ?></button>
                 </li>
@@ -164,7 +161,7 @@ function optimizer_customizer_stuff() {
                     <p><?php _e('The Customization Area is located on the left panel of the screen. Each time you want to add or customize an element, you can do that from here.', 'optimizer'); ?></p>
                     <p><?php _e('You can easily move to different Sections of the Options panel by hovering over the Quick Links Bar located on the very left. You can also use the Optimizer Logo <i class="touroptimlogo"></i> as back button when you are inside a Section.', 'optimizer'); ?></p>
                 </div>
-                <img class="alignright" src="<?php echo get_template_directory_uri().'/customizer/assets/images/step1.png'; ?>" />
+                <img class="alignright" src="<?php echo esc_url(get_template_directory_uri()).'/customizer/assets/images/step1.png'; ?>" />
                 <div style="clear:both"></div>
               	<button class="tournext"><?php _e('Next', 'optimizer'); ?> <i class="fa fa-chevron-right"></i></button><button class="tourprev"><i class="fa fa-chevron-left"></i> <?php _e('Previous', 'optimizer'); ?></button>
               </li>
@@ -174,7 +171,7 @@ function optimizer_customizer_stuff() {
                 <div class="alignleft">
               		<p><?php _e('Whenever you make changes to the theme from the Customization Area, you will see the changes live on the right side.', 'optimizer'); ?></p>
                 </div>
-                <img class="alignright" src="<?php echo get_template_directory_uri().'/customizer/assets/images/step2.png'; ?>" /><div style="clear:both"></div>
+                <img class="alignright" src="<?php echo esc_url(get_template_directory_uri()).'/customizer/assets/images/step2.png'; ?>" /><div style="clear:both"></div>
               	<button class="tournext"><?php _e('Next', 'optimizer'); ?> <i class="fa fa-chevron-right"></i></button><button class="tourprev"><i class="fa fa-chevron-left"></i> <?php _e('Previous', 'optimizer'); ?></button>
               </li>
 
@@ -187,7 +184,7 @@ function optimizer_customizer_stuff() {
                 <p><strong><i>B</i> <?php _e('Frontpage Widgets', 'optimizer'); ?> :</strong> <?php _e('The Main body of the Frontpage is a widget area. You can add widgets to this area from Frontpage > Frontpage Content.', 'optimizer'); ?></p>
                 <p><strong><i>C</i> <?php _e('Footer Widgets', 'optimizer'); ?> :</strong> <?php _e('You can easily Add Widgets to this area from Footer > Footer Widgets.', 'optimizer'); ?></p>
                 </div>
-                <img class="alignright" src="<?php echo get_template_directory_uri().'/customizer/assets/images/step3.png'; ?>" /><div style="clear:both"></div>
+                <img class="alignright" src="<?php echo esc_url(get_template_directory_uri()).'/customizer/assets/images/step3.png'; ?>" /><div style="clear:both"></div>
               	<button class="tournext"><?php _e('Next', 'optimizer'); ?> <i class="fa fa-chevron-right"></i></button><button class="tourprev"><i class="fa fa-chevron-left"></i> <?php _e('Previous', 'optimizer'); ?></button>           
               </li>
               
@@ -196,7 +193,7 @@ function optimizer_customizer_stuff() {
               	<h4><?php _e('Preview Navigation Bar', 'optimizer'); ?></h4>
                 <div class="alignleft">
               		<p><?php _e('You can quickly navigate to different pages of your site from this top navigation bar. You can hide it anytime by clicking the arrow button beside it.', 'optimizer'); ?></p></div>
-                <img class="alignright" src="<?php echo get_template_directory_uri().'/customizer/assets/images/step6.png'; ?>" /><div style="clear:both"></div>
+                <img class="alignright" src="<?php echo esc_url(get_template_directory_uri()).'/customizer/assets/images/step6.png'; ?>" /><div style="clear:both"></div>
               	<button class="tournext"><?php _e('Next', 'optimizer'); ?> <i class="fa fa-chevron-right"></i></button><button class="tourprev"><i class="fa fa-chevron-left"></i> <?php _e('Previous', 'optimizer'); ?></button>            
              </li>
               
@@ -210,8 +207,7 @@ function optimizer_customizer_stuff() {
             </ol>
             <div class="tour_backdrop"></div>
             
-            <!--UPGRADE-->
-            <?php get_template_part('customizer/upgrade','pro'); ?>
+            <?php do_action( 'optimizer_theme_guides' ); ?>
         
 <?php } 
 
@@ -244,27 +240,27 @@ function optimizer_customizer_footer() {
                     <ul>
                     	<!--PAGES-->
                     	<li><strong><?php _e('Pages:', 'optimizer'); ?></strong></li>
-                        <li><a href="<?php echo home_url('/'); ?>"><?php _e('Front Page', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/')); ?>"><?php _e('Front Page', 'optimizer'); ?></a></li>
                         <?php $pageids = get_all_page_ids(); foreach($pageids as $page) {?>
 							<?php if(get_post_status($page) =='publish') { ?>
-                            	<li><a href="<?php echo get_the_permalink($page); ?>"><?php echo get_the_title($page); ?></a></li>
+                            	<li><a href="<?php echo esc_url(get_the_permalink($page)); ?>"><?php echo get_the_title($page); ?></a></li>
                             <?php } ?>
                         <?php } ?>
                         <!--POSTS-->
                         <?php $postid =''; $postq= get_posts("post_type=post&numberposts=1&post_status=publish"); $postid =$postq[0]->ID; ?>
-                        <?php $catid =''; $categories = get_categories(array('orderby' => 'count','number' => '1')); $catid = $categories[0]->term_id; ?>
-                        <?php $tagid =''; $tags = get_tags(array('orderby' => 'count','number' => '1')); if(!empty($tagid)){ $tagid = $tags[0]->name;} ?>
+                        <?php $catid =''; $categories = get_categories(array('orderby' => 'count','number' => '1')); $catid = isset($categories[0]) ? $categories[0]->term_id : ''; ?>
+                        <?php $tagid =''; $tags = get_tags(array('orderby' => 'count','number' => '1')); if(!empty($tagid)){ $tagid = isset($tags[0]) ? $tags[0]->name : '';} ?>
                         <?php $dateid =''; ?>
                         <li><strong><?php _e('Posts:', 'optimizer'); ?></strong></li>
-                        <li><a href="<?php echo get_permalink($postid); ?>"><?php _e('Single Post', 'optimizer'); ?></a></li>
-                        <li><a href="<?php echo home_url('/?cat=').$catid; ?>"><?php _e('Category Page', 'optimizer'); ?></a></li>
-                        <li><a href="<?php echo home_url('/?tag=').$tagid; ?>"><?php _e('Tag Page', 'optimizer'); ?></a></li>
-<!--                        <li><a href="<?php echo home_url('/?s=the'); ?>"><?php _e('Archive Page', 'optimizer'); ?></a></li>-->
-                        <li><a href="<?php echo home_url('/?author=1'); ?>"><?php _e('Author Page', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(get_permalink($postid)); ?>"><?php _e('Single Post', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/?cat=')).$catid; ?>"><?php _e('Category Page', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/?tag=')).$tagid; ?>"><?php _e('Tag Page', 'optimizer'); ?></a></li>
+<!--                        <li><a href="<?php echo esc_url(home_url('/?s=the')); ?>"><?php _e('Archive Page', 'optimizer'); ?></a></li>-->
+                        <li><a href="<?php echo esc_url(home_url('/?author=1')); ?>"><?php _e('Author Page', 'optimizer'); ?></a></li>
                         <!--MISC-->
                         <li><strong><?php _e('Other:', 'optimizer'); ?></strong></li>
-                        <li><a href="<?php echo home_url('/?s=the'); ?>"><?php _e('Search Page', 'optimizer'); ?></a></li>
-                        <li><a href="<?php echo home_url('/nn49721667/'); ?>"><?php _e('404 Page', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/?s=the')); ?>"><?php _e('Search Page', 'optimizer'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/nn49721667/')); ?>"><?php _e('404 Page', 'optimizer'); ?></a></li>
                     </ul>
             </div>
         </div>
@@ -293,7 +289,7 @@ function optimizer_customizer_footer() {
         	<?php /* Add Widget Button for Frontpage*/?>
             <?php if ( is_active_sidebar( 'front_sidebar' ) && is_front_page() ) { ?>
                 <div class="customizer_sidebar_holder has_sidebar" data-sidebar-id="front_sidebar">
-                    <a class="add_widget_topage" title="<?php _e('Add Widgets Here','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                    <a class="add_widget_topage" title="<?php esc_attr_e('Add Widgets Here','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                 </div>
             <?php } ?>
             
@@ -301,7 +297,7 @@ function optimizer_customizer_footer() {
             <?php if(is_singular()){ ?>
 				<?php if(!is_active_sidebar('sidebar')){ $has_sidebar = 'has_no_sidebar';}else{ $has_sidebar = 'has_sidebar';}?>
                     <div class="customizer_sidebar_holder <?php echo $has_sidebar; ?>" data-sidebar-id="sidebar">
-                        <a class="add_widget_topage" title="<?php _e('Add Widgets Here','optimizer'); ?>"><i class="fa fa-plus"></i></a>
+                        <a class="add_widget_topage" title="<?php esc_attr_e('Add Widgets Here','optimizer'); ?>"><i class="fa fa-plus"></i></a>
                     </div>
                 <?php } ?>
 <?php } ?>
@@ -333,17 +329,17 @@ function optimizer_backend(){ ?>
         <div class="blocks_wrap">
         	<div class="center">
                 <!--BLOCK 1-->
-                <div class="block">
+                <div class="backend_block">
                     <p><?php _e('Customize your website live with our improved customizer, which cuts down the website building time in half.','optimizer'); ?></p>
                     <a href="<?php echo admin_url('/customize.php'); ?>" target="_blank" class="backend_btn"><?php _e('Customize','optimizer'); ?></a>
                 </div>
                 <!--BLOCK 2-->
-                <div class="block">
+                <div class="backend_block">
                     <p><?php _e('Optimizer is extensively documented. You will find useful information about the theme ranging from introductions to advanced features.','optimizer'); ?></p>
                     <a href="http://optimizerwp.com/optimizer-documentation/" target="_blank"  class="backend_btn"><?php _e('Documentation','optimizer'); ?></a>
                 </div>
                 <!--BLOCK 3-->
-                <div class="block">
+                <div class="backend_block">
                     <p><?php _e('Unlock the true power of the Optimizer by upgrading to Pro. Pro has no Frontpage Widgets Limit, 8 Front Page Elements, 60 more powerful options  & 24/7 Support.','optimizer'); ?></p>
                     <a href="http://optimizerwp.com/" target="_blank"  class="backend_btn"><?php _e('Upgrade','optimizer'); ?></a>
                 </div> 
@@ -385,7 +381,7 @@ function optimizer_backup_import() {
 		$filecontent = trim($wp_filesystem->get_contents($_FILES["file"]["tmp_name"]));
 		$string = str_replace("\n","",$filecontent); 
 		$options = json_decode($string, true);
-		//print_r($options);
+
 		
 		update_option('optimizer', $options);
 		$redirect = admin_url('/customize.php'); 
@@ -437,4 +433,3 @@ function optimizer_google_fonts() {
 
 }
 add_action( 'wp_enqueue_scripts', 'optimizer_google_fonts' );
-//add_action( 'admin_enqueue_scripts', 'optimizer_google_fonts' );

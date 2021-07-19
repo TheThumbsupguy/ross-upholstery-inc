@@ -57,6 +57,14 @@ require(get_template_directory() . '/customizer/includes/helpers.php');
 	    'theme_supports' => '',
 	    'title' => __( 'Miscellaneous', 'optimizer' ),
 	) );
+	
+	
+	$wp_customize->add_panel( 'help_panel', array(
+		'priority' => 2,
+	    'capability' => 'edit_theme_options',
+	    'theme_supports' => '',
+	    'title' => __( 'Help', 'optimizer' ),
+	) );
 
 	
 //========================= ADD SECTIONS==============================
@@ -227,7 +235,13 @@ require(get_template_directory() . '/customizer/includes/helpers.php');
             'panel'       => 'misc_panel',
         ) );
 		
+		
 
+        $wp_customize->add_section( 'otherhelp_section', array(
+            'title'       => __( 'Documentation', 'optimizer' ),
+            'priority'    => 10,
+            'panel'       => 'help_panel',
+        ) );
 
 
 
@@ -254,7 +268,8 @@ $wp_customize->get_control( 'blogdescription' )->section	= 'headlogo_section';
 $wp_customize->get_setting( 'blogname' )->transport	= 'postMessage';
 $wp_customize->get_setting( 'blogdescription' )->transport	= 'postMessage';
 
-
+//Wordpress 4.7+ Remove Wordpress's own custom css 
+$wp_customize->remove_section( 'custom_css' );
 
 
 //--------------------INCLUDE CONTROLS
@@ -265,11 +280,10 @@ require(get_template_directory() . '/customizer/controls/settings-postpage.php')
 require(get_template_directory() . '/customizer/controls/settings-footer.php');
 require(get_template_directory() . '/customizer/controls/settings-misc.php');
 require(get_template_directory() . '/customizer/controls/settings-code.php');
-
+require(get_template_directory() . '/customizer/controls/settings-help.php');
 
 }
 add_action( 'customize_register', 'optimizer_customizer_register' );
-
 
 
 
@@ -282,12 +296,15 @@ function optimizer_live_preview()
 add_action( 'customize_preview_init', 'optimizer_live_preview' );
 
 
-
 function enqueue_customizer_scripts(){
 	wp_enqueue_script( 'jquery-ui-tooltip' );
 	wp_enqueue_script( 'hoverIntent' );
     wp_enqueue_style( 'optimizer-customizer-css', get_template_directory_uri().'/customizer/assets/customizer.css', 'customizer-css');
 	wp_enqueue_script('optimizer-customizer-js',get_template_directory_uri().'/customizer/assets/customizer.js', array('customize-controls'), true);
+	
+	//Wordpress 4.7 FIXES
+	if ( function_exists( 'wp_update_custom_css_post' ) ) {  $wp4_7 = 'wp4_7';  }else{  $wp4_7 = '';  }
+	
 	wp_localize_script( 'optimizer-customizer-js', 'objectL10n', array(
 		'addawidget' => __( 'Add Widget', 'optimizer' ),
 		'sitettfont' => __( 'Site Title Font', 'optimizer' ),
@@ -307,6 +324,11 @@ function enqueue_customizer_scripts(){
 		'prowidget' => __( 'Upgrade to PRO to Unlock this Widget', 'optimizer' ),
 		'optimwidgt' => __( 'Optimizer Widgets', 'optimizer' ),
 		'othrimwidgt' => __( 'Other Widgets', 'optimizer' ),
+		'socialinks' => __( '<span>Social Links</span> All Major Social Sites are supported. Your links will be automatically detected and relevant icons will be displayed.', 'optimizer' ),
+		'rate_opt' => __( 'We hope you are enjoying Optimizer. Would you be kind enough to', 'optimizer' ),
+		'rate_smile' => ''.esc_url(home_url('/')).'wp-includes/images/smilies/icon_smile.gif',
+		'wp4_7' => $wp4_7,
+		
 ) );
 }
 add_action( 'customize_controls_enqueue_scripts', 'enqueue_customizer_scripts' );

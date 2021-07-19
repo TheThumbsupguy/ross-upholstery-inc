@@ -1,0 +1,1 @@
+hð‰`<?php exit; ?>a:1:{s:7:"content";s:218:"{"common.install":1484338558,"minify.hide_minify_help":true,"license.status":"no_key","license.next_check":1620079783,"license.terms":"","common.next_support_us_invitation":1622239941,"common.support_us_invitations":2}";}
