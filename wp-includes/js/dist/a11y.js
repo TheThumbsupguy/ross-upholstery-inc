@@ -82,28 +82,27 @@ this["wp"] = this["wp"] || {}; this["wp"]["a11y"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 324);
+/******/ 	return __webpack_require__(__webpack_require__.s = 446);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 182:
+/***/ 260:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["domReady"]; }());
 
 /***/ }),
 
-/***/ 324:
+/***/ 446:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
 
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, "setup", function() { return /* binding */ build_module_setup; });
-__webpack_require__.d(__webpack_exports__, "speak", function() { return /* binding */ build_module_speak; });
+// EXTERNAL MODULE: external {"this":["wp","domReady"]}
+var external_this_wp_domReady_ = __webpack_require__(260);
+var external_this_wp_domReady_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_domReady_);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/a11y/build-module/addContainer.js
 /**
@@ -111,7 +110,7 @@ __webpack_require__.d(__webpack_exports__, "speak", function() { return /* bindi
  *
  * @param {string} ariaLive Optional. Value for the 'aria-live' attribute, default 'polite'.
  *
- * @return {Object} $container The ARIA live region jQuery object.
+ * @return {HTMLDivElement} The ARIA live region HTML element.
  */
 var addContainer = function addContainer(ariaLive) {
   ariaLive = ariaLive || 'polite';
@@ -122,7 +121,12 @@ var addContainer = function addContainer(ariaLive) {
   container.setAttribute('aria-live', ariaLive);
   container.setAttribute('aria-relevant', 'additions text');
   container.setAttribute('aria-atomic', 'true');
-  document.querySelector('body').appendChild(container);
+  var body = document.querySelector('body');
+
+  if (body) {
+    body.appendChild(container);
+  }
+
   return container;
 };
 
@@ -141,10 +145,6 @@ var clear = function clear() {
 };
 
 /* harmony default export */ var build_module_clear = (clear);
-
-// EXTERNAL MODULE: external {"this":["wp","domReady"]}
-var external_this_wp_domReady_ = __webpack_require__(182);
-var external_this_wp_domReady_default = /*#__PURE__*/__webpack_require__.n(external_this_wp_domReady_);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/a11y/build-module/filterMessage.js
 var previousMessage = '';
@@ -177,6 +177,15 @@ var filterMessage = function filterMessage(message) {
 /* harmony default export */ var build_module_filterMessage = (filterMessage);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/a11y/build-module/index.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setup", function() { return build_module_setup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "speak", function() { return build_module_speak; });
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
 
 
 
@@ -190,11 +199,11 @@ var build_module_setup = function setup() {
   var containerAssertive = document.getElementById('a11y-speak-assertive');
 
   if (containerPolite === null) {
-    containerPolite = build_module_addContainer('polite');
+    build_module_addContainer('polite');
   }
 
   if (containerAssertive === null) {
-    containerAssertive = build_module_addContainer('assertive');
+    build_module_addContainer('assertive');
   }
 };
 /**
@@ -203,11 +212,23 @@ var build_module_setup = function setup() {
 
 external_this_wp_domReady_default()(build_module_setup);
 /**
- * Update the ARIA live notification area text node.
+ * Allows you to easily announce dynamic interface updates to screen readers using ARIA live regions.
+ * This module is inspired by the `speak` function in wp-a11y.js
  *
  * @param {string} message  The message to be announced by Assistive Technologies.
  * @param {string} ariaLive Optional. The politeness level for aria-live. Possible values:
  *                          polite or assertive. Default polite.
+ *
+ * @example
+ * ```js
+ * import { speak } from '@wordpress/a11y';
+ *
+ * // For polite messages that shouldn't interrupt what screen readers are currently announcing.
+ * speak( 'The message you want to send to the ARIA live region' );
+ *
+ * // For assertive messages that should interrupt what screen readers are currently announcing.
+ * speak( 'The message you want to send to the ARIA live region', 'assertive' );
+ * ```
  */
 
 var build_module_speak = function speak(message, ariaLive) {
