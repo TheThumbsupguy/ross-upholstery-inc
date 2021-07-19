@@ -28,6 +28,7 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 			'jpeg',
 			'jpe',
 			'png',
+			'svg',
 		);
 
 		/**
@@ -52,11 +53,11 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 			if ( $hyperlinks ) {
 				$this->debug_message( 'using figure+hyperlink(a) patterns with src required' );
 				$search_pattern   = '#(?:<figure[^>]*?\s+?class\s*=\s*["\'](?P<figure_class>[\w\s-]+?)["\'][^>]*?>\s*)?(?:<a[^>]*?\s+?href\s*=\s*["\'](?P<link_url>[^\s]+?)["\'][^>]*?>\s*)?(?P<img_tag><img[^>]*?\s+?src\s*=\s*("|\')(?P<img_url>(?!\4).+?)\4[^>]*?>){1}(?:\s*</a>)?#is';
-				$unquoted_pattern = '#(?:<figure[^>]*?\s+?class\s*=\s*(?P<figure_class>[\w-]+)[^>]*?>\s*)?(?:<a[^>]*?\s+?href\s*=\s*(?P<link_url>[^"\'][^\s>]+)[^>]*?>\s*)?(?P<img_tag><img[^>]*?\s+?src\s*=\s*(?P<img_url>[^"\'][^\s>]+)[^>]*?>){1}(?:\s*</a>)?#is';
+				$unquoted_pattern = '#(?:<figure[^>]*?\s+?class\s*=\s*(?P<figure_class>[\w-]+)[^>]*?>\s*)?(?:<a[^>]*?\s+?href\s*=\s*(?P<link_url>[^"\'\\\\][^\s>]+)[^>]*?>\s*)?(?P<img_tag><img[^>]*?\s+?src\s*=\s*(?P<img_url>[^"\'\\\\][^\s>]+)[^>]*?>){1}(?:\s*</a>)?#is';
 			} elseif ( $src_required ) {
 				$this->debug_message( 'using plain img pattern, src still required' );
 				$search_pattern   = '#(?P<img_tag><img[^>]*?\s+?src\s*=\s*("|\')(?P<img_url>(?!\2).+?)\2[^>]*?>)#is';
-				$unquoted_pattern = '#(?P<img_tag><img[^>]*?\s+?src\s*=\s*(?P<img_url>[^"\'][^\s>]+)[^>]*?>)#is';
+				$unquoted_pattern = '#(?P<img_tag><img[^>]*?\s+?src\s*=\s*(?P<img_url>[^"\'\\\\<>][^\s<>]+)[^>]*?>)#is';
 			}
 			if ( preg_match_all( $search_pattern, $content, $images ) ) {
 				$this->debug_message( 'found ' . count( $images[0] ) . ' image elements with quoted pattern' );
@@ -137,6 +138,21 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 		}
 
 		/**
+		 * Match all <style> tags in a block of HTML.
+		 *
+		 * @param string $content Some HTML.
+		 * @return array An array of $styles matches, containing full elements with ending tags.
+		 */
+		function get_style_tags_from_html( $content ) {
+			$this->debug_message( '<b>' . __METHOD__ . '()</b>' );
+			$styles = array();
+			if ( preg_match_all( '#(?:<style[^>]*?>\s*).*?</style>?#is', $content, $styles ) ) {
+				return $styles[0];
+			}
+			return array();
+		}
+
+		/**
 		 * Match all elements by tag name in a block of HTML. Does not retrieve contents or closing tags.
 		 *
 		 * @param string $content Some HTML.
@@ -148,7 +164,7 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 			if ( ! ctype_alpha( $tag_name ) ) {
 				return array();
 			}
-			if ( preg_match_all( '#<' . $tag_name . '\s[^>]+?>#is', $content, $elements ) ) {
+			if ( preg_match_all( '#<' . $tag_name . '\s[^\\\\>]+?>#is', $content, $elements ) ) {
 				return $elements[0];
 			}
 			return array();
@@ -158,12 +174,31 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 		 * Try to determine height and width from strings WP appends to resized image filenames.
 		 *
 		 * @param string $src The image URL.
+		 * @param bool   $use_params Check ExactDN image parameters for additional size information. Default to false.
 		 * @return array An array consisting of width and height.
 		 */
-		function get_dimensions_from_filename( $src ) {
+		function get_dimensions_from_filename( $src, $use_params = false ) {
 			$this->debug_message( '<b>' . __METHOD__ . '()</b>' );
 			$width_height_string = array();
 			$this->debug_message( "looking for dimensions in $src" );
+			$width_param  = false;
+			$height_param = false;
+			if ( $use_params && strpos( $src, '?' ) ) {
+				$url_params = urldecode( $this->parse_url( $src, PHP_URL_QUERY ) );
+				if ( $url_params && false !== strpos( $url_params, 'resize=' ) ) {
+					preg_match( '/resize=(\d+),(\d+)/', $url_params, $resize_matches );
+					if ( is_array( $resize_matches ) && ! empty( $resize_matches[1] ) && ! empty( $resize_matches[2] ) ) {
+						$width_param  = (int) $resize_matches[1];
+						$height_param = (int) $resize_matches[2];
+					}
+				} elseif ( false !== strpos( $url_params, 'fit=' ) ) {
+					preg_match( '/fit=(\d+),(\d+)/', $url_params, $fit_matches );
+					if ( is_array( $fit_matches ) && ! empty( $fit_matches[1] ) && ! empty( $fit_matches[2] ) ) {
+						$width_param  = (int) $fit_matches[1];
+						$height_param = (int) $fit_matches[2];
+					}
+				}
+			}
 			if ( preg_match( '#-(\d+)x(\d+)(@2x)?\.(?:' . implode( '|', $this->extensions ) . '){1}(?:\?.+)?$#i', $src, $width_height_string ) ) {
 				$width  = (int) $width_height_string[1];
 				$height = (int) $width_height_string[2];
@@ -173,11 +208,47 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 					$height = 2 * $height;
 				}
 				if ( $width && $height ) {
+					if ( $width_param && $width_param < $width ) {
+						$width = $width_param;
+					}
+					if ( $height_param && $height_param < $height ) {
+						$height = $height_param;
+					}
 					$this->debug_message( "found w$width h$height" );
 					return array( $width, $height );
 				}
 			}
-			return array( false, false );
+			return array( $width_param, $height_param ); // These may be false, unless URL parameters were found.
+		}
+
+		/**
+		 * Get dimensions of a file from the URL.
+		 *
+		 * @param string $url The URL of the image.
+		 * @return array The width and height, in pixels.
+		 */
+		function get_image_dimensions_by_url( $url ) {
+			$this->debug_message( '<b>' . __METHOD__ . '()</b>' );
+			$this->debug_message( "getting dimensions for $url" );
+
+			list( $width, $height ) = $this->get_dimensions_from_filename( $url );
+			if ( empty( $width ) || empty( $height ) ) {
+				// Couldn't get it from the URL directly, see if we can get the actual filename.
+				$file = false;
+				if ( $this->allowed_urls && $this->allowed_domains ) {
+					$file = $this->cdn_to_local( $url );
+				}
+				if ( ! $file ) {
+					$file = $this->url_to_path_exists( $url );
+				}
+				if ( $file && $this->is_file( $file ) ) {
+					list( $width, $height ) = wp_getimagesize( $file );
+				}
+			}
+			$width  = $width && is_numeric( $width ) ? (int) $width : false;
+			$height = $height && is_numeric( $height ) ? (int) $height : false;
+
+			return array( $width, $height );
 		}
 
 		/**
@@ -186,16 +257,40 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 		 * @param string $img The full image element.
 		 * @return string The width found or an empty string.
 		 */
-		public function get_img_width( $img ) {
-			$width = $this->get_attribute( $img, 'width' );
-			// Then check for an inline max-width directive.
+		public function get_img_style_width( $img ) {
+			// Check for an inline max-width directive.
 			$style = $this->get_attribute( $img, 'style' );
 			if ( $style && preg_match( '#max-width:\s?(\d+)px#', $style, $max_width_string ) ) {
-				if ( $max_width_string[1] && ( ! $width || $max_width_string[1] < $width ) ) {
-					$width = $max_width_string[1];
+				if ( $max_width_string[1] && is_numeric( $max_width_string ) ) {
+					return (int) $max_width_string[1];
+				}
+			} elseif ( $style && preg_match( '#width:\s?(\d+)px#', $style, $width_string ) ) {
+				if ( $width_string[1] && is_numeric( $width_string[1] ) ) {
+					return (int) $width_string[1];
 				}
 			}
-			return $width;
+			return false;
+		}
+
+		/**
+		 * Get the height from an image element.
+		 *
+		 * @param string $img The full image element.
+		 * @return string The height found or an empty string.
+		 */
+		public function get_img_style_height( $img ) {
+			// Then check for an inline max-height directive.
+			$style = $this->get_attribute( $img, 'style' );
+			if ( $style && preg_match( '#max-height:\s?(\d+)px#', $style, $max_height_string ) ) {
+				if ( $max_height_string[1] && is_numeric( $max_height_string[1] ) ) {
+					return (int) $max_height_string[1];
+				}
+			} elseif ( $style && preg_match( '#height:\s?(\d+)px#', $style, $height_string ) ) {
+				if ( $height_string[1] && is_numeric( $height_string[1] ) ) {
+					return (int) $height_string[1];
+				}
+			}
+			return false;
 		}
 
 		/**
@@ -237,6 +332,21 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 		}
 
 		/**
+		 * Get CSS background-image rules from HTML.
+		 *
+		 * @param string $html The code containing potential background images.
+		 * @return array The URLs with background/background-image properties.
+		 */
+		function get_background_images( $html ) {
+			if ( ( false !== strpos( $html, 'background:' ) || false !== strpos( $html, 'background-image:' ) ) && false !== strpos( $html, 'url(' ) ) {
+				if ( preg_match_all( '#background(-image)?:\s*?[^;}]*?url\([^)]+\)#', $html, $matches ) ) {
+					return $matches[0];
+				}
+			}
+			return array();
+		}
+
+		/**
 		 * Set an attribute on an HTML element.
 		 *
 		 * @param string $element The HTML element to modify. Passed by reference.
@@ -246,18 +356,23 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 		 */
 		function set_attribute( &$element, $name, $value, $replace = false ) {
 			if ( 'class' === $name ) {
-				$element = preg_replace( "#\s$name\s+[^=]#", ' ', $element );
+				$element = preg_replace( "#\s$name\s+([^=])#", ' $1', $element );
 			}
 			$element = preg_replace( "#\s$name=\"\"#", ' ', $element );
 			$value   = trim( $value );
 			if ( $replace ) {
 				// Don't forget, back references cannot be used in character classes.
 				$new_element = preg_replace( '#\s' . $name . '\s*=\s*("|\')(?!\1).*?\1#is', " $name=$1$value$1", $element );
-				if ( strpos( $new_element, "$name=" ) ) {
+				if ( strpos( $new_element, "$name=" ) && $new_element !== $element ) {
 					$element = $new_element;
 					return;
 				}
-				$element = preg_replace( '#\s' . $name . '\s*=\s*[^"\'][^\s>]+#is', ' ', $element );
+				$new_element = preg_replace( '#\s' . $name . '\s*=\s*[^"\'][^\s>]+#is', ' ', $element );
+				if ( preg_match( '#\s' . $name . '\s*=\s*#', $new_element ) && $new_element === $element ) {
+					$this->debug_message( "$name replacement failed, still exists in $element" );
+					return;
+				}
+				$element = $new_element;
 			}
 			$closing = ' />';
 			if ( false === strpos( $element, '/>' ) ) {
@@ -296,26 +411,6 @@ if ( ! class_exists( 'EIO_Page_Parser' ) ) {
 				$attribute = preg_replace( '#background-image:\s*url\([^)]+\);?#', '', $attribute );
 			}
 			return $attribute;
-		}
-
-		/**
-		 * A wrapper for PHP's parse_url, prepending assumed scheme for network path
-		 * URLs. PHP versions 5.4.6 and earlier do not correctly parse without scheme.
-		 *
-		 * @param string  $url The URL to parse.
-		 * @param integer $component Retrieve specific URL component.
-		 * @return mixed Result of parse_url.
-		 */
-		function parse_url( $url, $component = -1 ) {
-			if ( 0 === strpos( $url, '//' ) ) {
-				$url = ( is_ssl() ? 'https:' : 'http:' ) . $url;
-			}
-			if ( false === strpos( $url, 'http' ) && '/' !== substr( $url, 0, 1 ) ) {
-				$url = ( is_ssl() ? 'https://' : 'http://' ) . $url;
-			}
-			// Because encoded ampersands in the filename break things.
-			$url = str_replace( '&#038;', '&', $url );
-			return parse_url( $url, $component );
 		}
 	}
 }

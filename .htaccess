@@ -1,11 +1,4 @@
-# BEGIN A2 Optimized
-# DO NOT REMOVE
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteRule wp-content/plugins/a2-optimized/resource/(.*) wp-content/a2-resource.php?resource=$1 [L]
-</IfModule>
-ErrorDocument 403 /403.shtml
-# END A2 Optimized
+
 
 
 
