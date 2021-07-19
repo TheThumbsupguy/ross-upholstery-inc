@@ -562,7 +562,9 @@
     "browsercache.other.w3tc": true,
     "browsercache.other.replace": true,
     "browsercache.other.querystring": true,
-    "browsercache.replace.exceptions": [],
+    "browsercache.replace.exceptions": [
+        ""
+    ],
     "browsercache.security.session.cookie_httponly": "",
     "browsercache.security.session.cookie_secure": "",
     "browsercache.security.session.use_only_cookies": "",
@@ -580,8 +582,8 @@
     "browsercache.security.pkp.extra": "maxage",
     "browsercache.security.pkp.report.url": "",
     "browsercache.security.pkp.report.only": "0",
-    "browsercache.security.referrer.policy": "false",
-    "browsercache.security.referrer.policy.directive": "0",
+    "browsercache.security.referrer.policy": true,
+    "browsercache.security.referrer.policy.directive": "no-referrer-when-downgrade",
     "browsercache.security.csp": false,
     "browsercache.security.csp.base": "",
     "browsercache.security.csp.frame": "",

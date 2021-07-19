@@ -8,28 +8,20 @@ ErrorDocument 403 /403.shtml
 # END A2 Optimized
 
 
-# BEGIN WordPress Hardening
-<FilesMatch "^.*(error_log|wp-config\.php|php.ini|\.[hH][tT][aApP].*)$">
-Order deny,allow
-Deny from all
-</FilesMatch>
+# BEGIN WordPress
+# The directives (lines) between `BEGIN WordPress` and `END WordPress` are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
 <IfModule mod_rewrite.c>
-    RewriteBase /
-    RewriteRule ^wp-admin/includes/ - [F,L]
-    RewriteRule !^wp-includes/ - [S=3]
-    RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
-    RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
-    RewriteRule ^wp-includes/theme-compat/ - [F,L]
-    RewriteRule ^wp-config\.php - [F,L]
-    RewriteRule ^php\.ini - [F,L]
-    RewriteRule \.htaccess - [F,L]
-    RewriteCond %{REQUEST_METHOD} POST
-    RewriteCond %{REQUEST_URI} .wp-comments-post.php*
-    RewriteCond %{HTTP_REFERER} !.*rossupholsteryinc.com.* [OR]
-    RewriteCond %{HTTP_USER_AGENT} ^$
-    RewriteRule (.*) - [F,L]
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
 </IfModule>
-# END WordPress Hardening
+
+# END WordPress
 
 
 
@@ -205,7 +197,7 @@ Deny from all
     </IfModule>
 </FilesMatch>
 <IfModule mod_headers.c>
-    Header set Referrer-Policy ""
+    Header set Referrer-Policy "no-referrer-when-downgrade"
 </IfModule>
 # END W3TC Browser Cache
 # BEGIN W3TC Page Cache core
